@@ -7,3 +7,9 @@ def menu_main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 menu_open = False
+
+        menu_draw(menu_window)
+
+
+def menu_draw(window):
+    window.display.flip()

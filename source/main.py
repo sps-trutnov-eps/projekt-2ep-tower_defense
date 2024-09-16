@@ -6,3 +6,13 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# co udělat
+# TODO: menu,
+#       hra,
+#       mapy,
+#       ...
+
+# Na čem se dohodnout
+# TODO: jaké hodnoty? (životy, apod.)
+#       jaké mechaniky? (vesnice, doly, ...)
