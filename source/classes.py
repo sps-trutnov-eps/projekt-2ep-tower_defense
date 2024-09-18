@@ -20,13 +20,13 @@ class Hra:
                 self.base_enemy_number = 15
 
     def update_wave_count(self):
-        self.wave += 1
+        self.wave_count += 1
 
     class Nepritel:
-        def __init__(self, type):
-            self.enemy_type = type
+        def __init__(self, typ_nepritele):
+            self.typ_nepritele = typ_nepritele
 
-            match self.enemy_type:
+            match self.typ_nepritele:
                 case "normal":
                     self.hp = 4
                     self.speed = 2
@@ -54,10 +54,10 @@ class Hra:
             self.y = y
 
             # kapacita pro střelivo
-            self.capacity = 200
+            self.kapacita_streliva = 200
 
     class Spawner:
-        def __init__(self, hra_instance, obtiznost, x, y):
+        def __init__(self, hra_instance, x, y):
             self.hra_instance = hra_instance
 
             self.x = x
@@ -104,6 +104,24 @@ class Hra:
 
         def spawn_wave(self):
             self.hra_instance.enemies_list.append(self.generate_wave())
+
+    class Vez:
+        def __init__(self, typ, location):
+            self.type = typ
+            self.location = location
+            self.define_rest_of_stats()
+
+            self.damage = 0
+            self.attack_cooldown = 0
+
+        def define_rest_of_stats(self):
+            match self.type:
+                case "test_tower":
+                    self.damage = 1
+                    self.attack_cooldown = 1000     # v milisekundách
+                case _:     # v případě chyby
+                    self.damage = 1
+                    self.attack_cooldown = 1000
 
     class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
         def __init__(self):
