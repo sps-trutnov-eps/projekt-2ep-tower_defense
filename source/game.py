@@ -17,6 +17,8 @@ def game_main(mapa, obtiznost):
 
     from classes import Hra
     # TODO: importování map, nějak, nebo, pro každou mapu zvlášť celá hra??
+    log = Hra.Logging()
+    log.write_to_log("Hra běží")
 
     while game_running:
         for event in pygame.event.get():

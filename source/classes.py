@@ -130,3 +130,25 @@ class Hra:
     class Vesnice:
         def __init__(self):     # usedliště civilistů, kteří by transportovali suroviny do základen
             pass
+
+    class Logging:
+        def __init__(self):
+            self.logging = True
+            self.log_connection = self.try_open_log()
+
+        def try_open_log(self):
+            if self.logging:
+                try:
+                    open("game.log")
+                    return True
+                except:
+                    return False
+
+        def write_to_log(self, message):
+            if self.log_connection and self.logging:
+                from datetime import datetime
+                current_time = str(datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+
+                log = open("game.log", "w")
+                log.write(f"[{current_time}] {message}")
+                log.close()
