@@ -8,6 +8,7 @@ class Hra:
         self.obtiznost = obtiznost
         self.wave_count = 1
         self.enemies_list = []
+        self.enemies_to_spawn_count = [0, 0, 0]      # normal enemy | fast enemy | tank
 
         match self.obtiznost:
             case 1:
@@ -18,6 +19,8 @@ class Hra:
                 self.base_enemy_number = 20
             case _:
                 self.base_enemy_number = 15
+
+
 
     def update_wave_count(self):
         self.wave_count += 1
@@ -109,6 +112,10 @@ class Hra:
         def spawn_wave(self):
             self.hra_instance.enemies_list.append(self.generate_wave())
 
+        def spawn_enemy(self, enemy_type):
+            enemy = self.hra_instance.Nepritel(enemy_type)
+            self.hra_instance.enemies_list.append(enemy)
+
     class Vez:
         def __init__(self, typ, location):
             self.type = typ
@@ -151,6 +158,7 @@ class Hra:
         def init_log_session(self):
             log = open("game.log", "a")
             log.write(f"\n\n\n[{self.get_current_time()}] Spouštím hru")
+            log.close()
 
         def get_current_time(self):
             from datetime import datetime
