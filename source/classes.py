@@ -30,15 +30,19 @@ class Hra:
                 case "normal":
                     self.hp = 4
                     self.speed = 2
+                    self.rect_color = (255, 0, 0)
                 case "fast":
                     self.hp = 1
                     self.speed = 3
+                    self.rect_color = (255, 255, 0)
                 case "tank":
                     self.hp = 10
                     self.speed = 1
+                    self.rect_color = (0, 0, 0)
                 case _:
                     self.hp = 4
                     self.speed = 2
+                    self.rect_color = (255, 0, 0)
 
     class Zakladna:
         def __init__(self, obtiznost, x, y):
@@ -113,6 +117,9 @@ class Hra:
 
             self.damage = 0
             self.attack_cooldown = 0
+            self.list_of_shots = []
+
+
 
         def define_rest_of_stats(self):
             match self.type:
@@ -122,6 +129,9 @@ class Hra:
                 case _:     # v případě chyby
                     self.damage = 1
                     self.attack_cooldown = 1000
+
+        def shoot(self):
+            pass
 
     class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
         def __init__(self):
