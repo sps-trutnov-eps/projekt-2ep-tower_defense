@@ -151,7 +151,7 @@ class Hra:
         def try_open_log(self):
             if self.logging:
                 try:
-                    open("game.log")
+                    open("game.log", "w")
                     return True
                 except:
                     return False
