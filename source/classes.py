@@ -14,6 +14,18 @@ class Hra:
         self.seznam_cest = []
         self.aktualni_vlna_dokoncena = True
 
+        # textury       TODO: přidat více textur
+        self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png")
+        self.nepritel_fast_textura = None
+        self.nepritel_tank_textura = None
+
+        self.spawner_textura = None
+        self.dul_textura = None
+        self.vesnice_textura = None
+
+        self.vez_1_textura = None
+        self.vez_2_textura = None
+
         match self.obtiznost:
             case 1:
                 self.base_enemy_number = 10
@@ -30,8 +42,10 @@ class Hra:
         self.aktualni_vlna_dokoncena = False
 
     class Nepritel:
-        def __init__(self, typ_nepritele):
+        def __init__(self, typ_nepritele, spawner_location, spawner_side):
             self.typ_nepritele = typ_nepritele
+            self.location = spawner_location
+            self.otocen_na_stranu = spawner_side
 
             match self.typ_nepritele:
                 case "normal":
@@ -68,15 +82,15 @@ class Hra:
             self.kapacita_streliva = 200
 
     class Spawner:
-        def __init__(self, hra_instance, x, y):
+        def __init__(self, hra_instance, location, rotace_spawneru):
 
-            self.x = x
-            self.y = y
+            self.location = location
+            self.rotace_spawneru = rotace_spawneru      # strany jako do leva, do prava, dolu, nahoru
 
             self.obtiznost = hra_instance.obtiznost
             self.obtiznost_multiplier = self.obtiznost * 0.5
 
-            self.rect = pygame.Rect(self.x, self.y, 60, 60)
+            self.rect = pygame.Rect(self.location[0], self.location[1], 60, 60)
 
             self.special_moznosti = ("fast", "tank")
 
@@ -106,7 +120,7 @@ class Hra:
 
             # Generate normal enemies
             for _ in range(normal_enemy_count):
-                enemy = hra_instance.Nepritel("normal")
+                enemy = hra_instance.Nepritel("normal", self.location, self.rotace_spawneru)
                 list_of_enemies.append(enemy)
 
             # Generate special enemies

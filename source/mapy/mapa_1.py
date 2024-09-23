@@ -9,7 +9,7 @@ def load_entities(entity_type, initiated_game):
         case "spawnery":
             # hra_instance, x ,y
             to_return = [
-                initiated_game.Spawner(initiated_game, 100, 50)
+                initiated_game.Spawner(initiated_game, (100, 50), "dolu")
             ]
         case "nepratele":
             # typ_nepritele     vrací se prázdné, spawnery je tvoří

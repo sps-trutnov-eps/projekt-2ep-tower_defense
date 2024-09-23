@@ -49,12 +49,28 @@ def load_seznam_entit(hra, log):
     return seznam_entit
 
 
-def count_entities(type: str, seznam_entit):
+def count_entities(entity_type: str, seznam_entit):
     count = 0
-    for entity in seznam_entit[type]:
+    for entity in seznam_entit[entity_type]:
         count += 1
 
     return count
+
+
+def preklad_na_stupne(enemy):
+    strana = enemy.otocen_na_stranu
+    stupne = 0
+    match strana:
+        case "dolu":
+            stupne = 0
+        case "":
+            stupne = 90
+        case "":
+            stupne = 180
+        case "":
+            stupne = 270
+
+    return stupne
 
 
 def try_spawning_enemies(hra):
@@ -86,7 +102,7 @@ def game_updates(hra, log):
         if hra.seznam_entit["nepratele"][0]:
             move_enemies(hra.seznam_entit["nepratele"])
 
-            try_spawning_enemies(hra, hra.seznam_entit)
+            try_spawning_enemies(hra)
     except:
         pass
 
@@ -105,6 +121,13 @@ def game_window_draw(window, hra):
 
     for spawner in hra.seznam_entit["spawnery"]:
         pygame.draw.rect(window, RED, spawner.rect)
+
+    for enemy in hra.seznam_entit["nepratele"]:
+        if enemy.typ_nepritele == "normal":
+            stupne = preklad_na_stupne(enemy)
+            window.blit(pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
+                        (enemy.location[0], enemy.location[1])
+                        )
 
     pygame.display.flip()
 
