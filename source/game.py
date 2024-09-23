@@ -76,6 +76,7 @@ def preklad_na_stupne(enemy):
 def try_spawning_enemies(hra):
     for enemy_number in hra.enemies_to_spawn_count:
         if enemy_number > 0:
+            #if previous_enemy_is_far_enough:
             random_spawner = random.randint(0, len(hra.seznam_entit["spawnery"]) - 1)
             hra.seznam_entit["spawnery"][random_spawner].spawn_enemy(hra.enemies_list[0])
             hra.enemies_list[0].remove()
@@ -100,14 +101,19 @@ def game_updates(hra, log):
     # po kontrole zda nějací existují, posune nepřáteli
     try:
         if hra.seznam_entit["nepratele"][0]:
-            move_enemies(hra.seznam_entit["nepratele"])
-
-            try_spawning_enemies(hra)
+            pass
     except:
-        pass
+        try_spawning_enemies(hra)
+
+    move_enemies(hra.seznam_entit["nepratele"])
+
+    for enemy in hra.seznam_entit["nepratele"]:
+        kill_enemy = enemy.outofbounds_check(log)
+        if kill_enemy:
+            hra.seznam_entit["nepratele"].remove(enemy)
 
 
-def game_window_draw(window, hra):
+def game_window_draw(window, hra, log):
     window.fill(BLACK)
     for vesnice in hra.seznam_entit["vesnice"]:
         pygame.draw.rect(window, vesnice.color, vesnice.rect)
@@ -118,6 +124,8 @@ def game_window_draw(window, hra):
     for vez in hra.seznam_entit["veze"]:
         if vez.type == "test_tower":
             pygame.draw.rect(window, BLUE, vez.testing_rect)
+        else:
+            pass
 
     for spawner in hra.seznam_entit["spawnery"]:
         pygame.draw.rect(window, RED, spawner.rect)
@@ -158,7 +166,7 @@ def game_main(mapa, obtiznost):
 
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra)
+        game_window_draw(game_window, hra, log)
 
         clock.tick(FPS)
 

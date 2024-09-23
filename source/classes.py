@@ -19,6 +19,7 @@ class Hra:
         self.nepritel_fast_textura = None
         self.nepritel_tank_textura = None
 
+        self.background_textura = None
         self.spawner_textura = None
         self.dul_textura = None
         self.vesnice_textura = None
@@ -44,7 +45,7 @@ class Hra:
     class Nepritel:
         def __init__(self, typ_nepritele, spawner_location, spawner_side):
             self.typ_nepritele = typ_nepritele
-            self.location = spawner_location
+            self.location = list(spawner_location)
             self.otocen_na_stranu = spawner_side
 
             match self.typ_nepritele:
@@ -64,6 +65,31 @@ class Hra:
                     self.hp = 4
                     self.speed = 2
                     self.rect_color = (255, 0, 0)
+
+        def move(self):
+            match self.otocen_na_stranu:
+                case "dolu":
+                    self.location[1] += self.speed
+                case "nahoru":
+                    self.location[1] -= self.speed
+                case "do prava":
+                    self.location[0] += self.speed
+                case "do leva":
+                    self.location[0] -= self.speed
+
+        def check_for_turn(self):
+            pass
+
+        def outofbounds_check(self, log):
+            if self.location[0] < 0 or self.location[0] > 1200 or self.location[1] < 0 or self.location[1] > 800:
+                log.write_to_log("Nepřítel zjištěn mimo mapu")
+                log.write_to_log(f"Jeho souřadnice: {self.location}")
+                return True
+            else:
+                return False
+
+        def die(self):
+            pass
 
     class Zakladna:
         def __init__(self, obtiznost, x, y):
