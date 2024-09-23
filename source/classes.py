@@ -16,9 +16,9 @@ class Hra:
 
         match self.obtiznost:
             case 1:
-                self.base_enemy_number = 10
+                self.hp = 20
             case 2:
-                self.base_enemy_number = 15
+                self.hp = 15
             case 3:
                 self.base_enemy_number = 20
 
@@ -29,9 +29,6 @@ class Hra:
         self.wave_count += 1
         self.aktualni_vlna_dokoncena = False
 
-    class Nepritel:
-        def __init__(self, typ_nepritele):
-            self.typ_nepritele = typ_nepritele
 
             match self.typ_nepritele:
                 case "normal":
@@ -51,21 +48,11 @@ class Hra:
                     self.speed = 2
                     self.rect_color = (255, 0, 0)
 
-    class Zakladna:
-        def __init__(self, obtiznost, x, y):
-            match obtiznost:
-                case 1:
-                    self.hp = 150
-                case 2:
-                    self.hp = 125
-                case 3:
-                    self.hp = 100
 
-            self.x = x
-            self.y = y
+class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
+    def __init__(self):
+        pass
 
-            # kapacita pro střelivo
-            self.kapacita_streliva = 200
 
     class Spawner:
         def __init__(self, hra_instance, x, y):
