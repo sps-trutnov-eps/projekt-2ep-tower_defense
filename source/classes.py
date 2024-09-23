@@ -1,3 +1,4 @@
+import random
 import pygame
 import math
 
@@ -6,9 +7,12 @@ class Hra:
     def __init__(self, mapa, obtiznost):
         self.mapa = mapa
         self.obtiznost = obtiznost
-        self.wave_count = 1
+        self.wave_count = 0
+        self.seznam_entit = []
         self.enemies_list = []
         self.enemies_to_spawn_count = [0, 0, 0]      # normal enemy | fast enemy | tank
+        self.seznam_cest = []
+        self.aktualni_vlna_dokoncena = True
 
         match self.obtiznost:
             case 1:
@@ -17,13 +21,13 @@ class Hra:
                 self.base_enemy_number = 15
             case 3:
                 self.base_enemy_number = 20
+
             case _:
                 self.base_enemy_number = 15
 
-
-
     def update_wave_count(self):
         self.wave_count += 1
+        self.aktualni_vlna_dokoncena = False
 
     class Nepritel:
         def __init__(self, typ_nepritele):
@@ -65,29 +69,35 @@ class Hra:
 
     class Spawner:
         def __init__(self, hra_instance, x, y):
-            self.hra_instance = hra_instance
 
             self.x = x
             self.y = y
 
-            self.obtiznost = self.hra_instance.obtiznost
+            self.obtiznost = hra_instance.obtiznost
             self.obtiznost_multiplier = self.obtiznost * 0.5
 
-            self.rect = pygame.Rect(self.x, self.y, 25, 25)
+            self.rect = pygame.Rect(self.x, self.y, 60, 60)
+
+            self.special_moznosti = ("fast", "tank")
+
+        def make_wave(self, hra):
+            seznam_entit = self.generate_wave(hra)
+            for enemy in seznam_entit:
+                hra.seznam_entit["nepratele"].append(enemy)
 
         # vygeneruje seznam nepřátel (třída Nepratele)
-        def generate_wave(self):
+        def generate_wave(self, hra_instance):
             special_enemies = False
             list_of_enemies = []
 
-            if self.hra_instance.wave_count >= 5:
+            if hra_instance.wave_count >= 5:
                 special_enemies = True
 
-            total_enemy_number = self.hra_instance.base_enemy_number + self.hra_instance.wave_count * 5
+            total_enemy_number = hra_instance.base_enemy_number + (hra_instance.wave_count * 5)
 
             max_special = 0
             if special_enemies:
-                if self.hra_instance.wave_count < 20:
+                if hra_instance.wave_count < 20:
                     max_special = math.ceil(total_enemy_number / 5)
                 else:
                     max_special = math.ceil(total_enemy_number / 2)
@@ -96,12 +106,12 @@ class Hra:
 
             # Generate normal enemies
             for _ in range(normal_enemy_count):
-                enemy = self.hra_instance.Nepritel(self.obtiznost, "normal")
+                enemy = hra_instance.Nepritel("normal")
                 list_of_enemies.append(enemy)
 
             # Generate special enemies
             for _ in range(max_special):
-                special_enemy = self.hra_instance.Nepritel(self.obtiznost, "special")
+                special_enemy = hra_instance.Nepritel(random.choice(self.special_moznosti))
                 list_of_enemies.append(special_enemy)
 
             return list_of_enemies
@@ -116,37 +126,70 @@ class Hra:
             enemy = self.hra_instance.Nepritel(enemy_type)
             self.hra_instance.enemies_list.append(enemy)
 
+    class Cesta:
+        def __init__(self, hra_instance, x, y, sirka, vyska):
+            self.cesta = pygame.Rect(x, y, sirka, vyska)
+            hra_instance.seznam_cest.append(self.cesta)
+
     class Vez:
         def __init__(self, typ, location):
             self.type = typ
             self.location = location
-            self.define_rest_of_stats()
 
             self.damage = 0
             self.attack_cooldown = 0
+            self.radius = 0
             self.list_of_shots = []
 
+            self.testing_rect = None
+            self.blittable = None
 
+            self.define_rest_of_stats()
 
         def define_rest_of_stats(self):
             match self.type:
                 case "test_tower":
                     self.damage = 1
                     self.attack_cooldown = 1000     # v milisekundách
+                    self.radius = 15
+                    self.testing_rect = pygame.Rect(self.location[0], self.location[1], 35, 35)
+
                 case _:     # v případě chyby
                     self.damage = 1
                     self.attack_cooldown = 1000
+                    self.radius = 15
+
+        def placement_check(self, hra_instance, location: list):      # will require a check when used, whether it can be placed
+            location_rectangle = pygame.Rect(location[0], location[1], 1, 1)
+            collides = False
+
+            for cesta in hra_instance.seznam_cest:
+                if location_rectangle.collidepoint(cesta):
+                    collides = True
+
+            return collides
 
         def shoot(self):
             pass
 
     class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
-        def __init__(self):
-            pass
+        def __init__(self, hra_instance, location: list):
+            self.location = location
+            self.ownership = True
+            self.rect = pygame.Rect(location[0], location[1], 50, 50)
+            self.color = (30, 30, 30)
 
     class Vesnice:
-        def __init__(self):     # usedliště civilistů, kteří by transportovali suroviny do základen
-            pass
+        def __init__(self, hra_instance, location: list):     # usedliště civilistů, kteří by transportovali suroviny do základen
+            self.location = location
+            self.ownership = True
+            self.rect = pygame.Rect(location[0], location[1], 50, 50)
+            self.color = (255, 255, 0)      # pro případy, kdy není žádná textura
+
+        def check_closest_path_point(self, hra_instance):
+            check = False
+            if check:
+                self.ownership = False
 
     class Logging:
         def __init__(self):
@@ -169,10 +212,14 @@ class Hra:
         def try_open_log(self):
             if self.logging:
                 try:
-                    open("game.log", "w")
+                    open("game.log", "r")
                     return True
                 except:
-                    return False
+                    try:
+                        open("game.log", "w")
+                        return True
+                    except:
+                        return False
 
         def write_to_log(self, message):
             if self.log_connection and self.logging:

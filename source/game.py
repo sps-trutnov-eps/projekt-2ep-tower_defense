@@ -2,8 +2,14 @@ import pygame
 import random
 
 
+# barvičky
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+
+FPS = 60
 
 
 def load_seznam_entit(hra, log):
@@ -43,11 +49,19 @@ def load_seznam_entit(hra, log):
     return seznam_entit
 
 
-def try_spawning_enemies(hra, seznam_entit):
+def count_entities(type: str, seznam_entit):
+    count = 0
+    for entity in seznam_entit[type]:
+        count += 1
+
+    return count
+
+
+def try_spawning_enemies(hra):
     for enemy_number in hra.enemies_to_spawn_count:
         if enemy_number > 0:
-            random_spawner = random.randint(0, len(seznam_entit["spawnery"]) - 1)
-            seznam_entit["spawnery"][random_spawner].spawn_enemy(hra.enemies_list[0])
+            random_spawner = random.randint(0, len(hra.seznam_entit["spawnery"]) - 1)
+            hra.seznam_entit["spawnery"][random_spawner].spawn_enemy(hra.enemies_list[0])
             hra.enemies_list[0].remove()
 
 
@@ -56,16 +70,41 @@ def move_enemies(list_of_enemies):
         enemy.move()
 
 
-def game_updates(hra, seznam_entit):
+def game_updates(hra, log):
+    if hra.aktualni_vlna_dokoncena:
+        log.write_to_log(f"Zjištěno že není aktivní žádná vlna, spouštím vlnu: {hra.wave_count+1}")
+
+        for spawner in hra.seznam_entit["spawnery"]:
+            spawner.make_wave(hra)
+        hra.update_wave_count()
+
+        log.write_to_log(f"Vygenerováno: {count_entities('nepratele', hra.seznam_entit)}")
+        log.write_to_log(f"Vlna {hra.wave_count} úspěšně vygenerována")
+
     # po kontrole zda nějací existují, posune nepřáteli
-    if seznam_entit["nepratele"][0]:
-        move_enemies(seznam_entit["nepratele"])
+    try:
+        if hra.seznam_entit["nepratele"][0]:
+            move_enemies(hra.seznam_entit["nepratele"])
 
-    try_spawning_enemies(hra, seznam_entit)
+            try_spawning_enemies(hra, hra.seznam_entit)
+    except:
+        pass
 
 
-def game_window_draw(window):
+def game_window_draw(window, hra):
     window.fill(BLACK)
+    for vesnice in hra.seznam_entit["vesnice"]:
+        pygame.draw.rect(window, vesnice.color, vesnice.rect)
+
+    for dul in hra.seznam_entit["doly"]:
+        pygame.draw.rect(window, dul.color, dul.rect)
+
+    for vez in hra.seznam_entit["veze"]:
+        if vez.type == "test_tower":
+            pygame.draw.rect(window, BLUE, vez.testing_rect)
+
+    for spawner in hra.seznam_entit["spawnery"]:
+        pygame.draw.rect(window, RED, spawner.rect)
 
     pygame.display.flip()
 
@@ -73,16 +112,19 @@ def game_window_draw(window):
 def game_main(mapa, obtiznost):
     from classes import Hra
 
+    clock = pygame.time.Clock()
+
     game_window = pygame.display.set_mode((1200, 800))
     game_running = True
 
     hra = Hra(mapa, obtiznost)
     log = hra.Logging()
-    log.write_to_log("Hra běží")
+    log.write_to_log("Hra spuštěna")
 
     # [ základny | spawnery | nepratele | veze | doly | vesnice ]
     log.write_to_log("Zkouším načíst entity")
-    seznam_entit = load_seznam_entit(hra, log)
+    hra.seznam_entit = load_seznam_entit(hra, log)
+
     log.write_to_log("Entity načteny")
 
     while game_running:
@@ -91,8 +133,11 @@ def game_main(mapa, obtiznost):
                 game_running = False
                 log.write_to_log("Tlačítko QUIT zmáčknuto")
 
-        game_updates(hra, seznam_entit)
-        game_window_draw(game_window)
+        game_updates(hra, log)
+
+        game_window_draw(game_window, hra)
+
+        clock.tick(FPS)
 
     log.write_to_log("Hra ukončena")
 
