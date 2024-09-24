@@ -45,8 +45,9 @@ class Hra:
     class Nepritel:
         def __init__(self, typ_nepritele, spawner_location, spawner_side):
             self.typ_nepritele = typ_nepritele
-            self.location = list(spawner_location)
+            self.location = [spawner_location[0] + 30, spawner_location[1] + 30]
             self.otocen_na_stranu = spawner_side
+            self.rect = pygame.Rect(self.location[0] - (21/2), self.location[1] - (21/2), 27, 27)
 
             match self.typ_nepritele:
                 case "normal":
@@ -72,13 +73,28 @@ class Hra:
                     self.location[1] += self.speed
                 case "nahoru":
                     self.location[1] -= self.speed
-                case "do prava":
+                case "doprava":
                     self.location[0] += self.speed
-                case "do leva":
+                case "doleva":
                     self.location[0] -= self.speed
 
-        def check_for_turn(self):
-            pass
+        def check_for_turn(self, path_list, log):   # TODO: špatná detekce otáčení (přechod z jedné cesty na druhou?)
+            for path in path_list:
+                if self.rect.colliderect(path.cesta):
+                    if self.otocen_na_stranu != path.turn_to:
+                        match path.turn_to:
+                            case "doleva":
+                                self.otocen_na_stranu = "doleva"
+                                log.write_to_log("collision detected: doleva")
+                            case "doprava":
+                                self.otocen_na_stranu = "doprava"
+                                log.write_to_log("collision detected: doprava")
+                            case "dolu":
+                                self.otocen_na_stranu = "dolu"
+                                log.write_to_log("collision detected: dolu")
+                            case "nahoru":
+                                self.otocen_na_stranu = "nahoru"
+                                log.write_to_log("collision detected: nahoru")
 
         def outofbounds_check(self, log):
             if self.location[0] < 0 or self.location[0] > 1200 or self.location[1] < 0 or self.location[1] > 800:
@@ -87,9 +103,6 @@ class Hra:
                 return True
             else:
                 return False
-
-        def die(self):
-            pass
 
     class Zakladna:
         def __init__(self, obtiznost, x, y):
@@ -159,17 +172,19 @@ class Hra:
         def placeholder_draw(self, window):
             pygame.draw.rect(window, (255, 255, 0), self.rect)
 
-        def spawn_wave(self):
-            self.hra_instance.enemies_list.append(self.generate_wave())
+        def spawn_wave(self, hra_instance):
+            hra_instance.enemies_list.append(self.generate_wave())
+            return hra_instance
 
-        def spawn_enemy(self, enemy_type):
-            enemy = self.hra_instance.Nepritel(enemy_type)
-            self.hra_instance.enemies_list.append(enemy)
+        def spawn_enemy(self, enemy_type, hra_instance):
+            enemy = hra_instance.Nepritel(enemy_type)
+            hra_instance.enemies_list.append(enemy)
+            return hra_instance
 
     class Cesta:
-        def __init__(self, hra_instance, x, y, sirka, vyska):
+        def __init__(self, hra_instance, x, y, sirka, vyska, otocit_se_na):
             self.cesta = pygame.Rect(x, y, sirka, vyska)
-            hra_instance.seznam_cest.append(self.cesta)
+            self.turn_to = otocit_se_na
 
     class Vez:
         def __init__(self, typ, location):

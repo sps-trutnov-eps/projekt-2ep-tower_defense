@@ -31,6 +31,11 @@ def load_entities(entity_type, initiated_game):
             to_return = [
                 initiated_game.Vesnice(initiated_game, (150, 80))
             ]      # není dokončená třída
+        case "cesty":
+            to_return = [
+                initiated_game.Cesta(initiated_game, 115, 55, 30, 100, "dolu"),
+                initiated_game.Cesta(initiated_game, 115, 155, 180, 30, "doprava")
+            ]
         case _:
             to_return = [
                 None

@@ -20,7 +20,8 @@ def load_seznam_entit(hra, log):
         "nepratele": [],
         "veze": [],
         "doly": [],
-        "vesnice": []
+        "vesnice": [],
+        "cesty": []
     }
 
     match hra.mapa:
@@ -40,6 +41,8 @@ def load_seznam_entit(hra, log):
 
             seznam_entit["vesnice"] = load_entities("vesnice", hra)
             log.write_to_log("Načteny vesnice")
+
+            seznam_entit["cesty"] = load_entities("cesty", hra)
 
             # TODO: zakladny, spawnery, veze, doly, vesnice
 
@@ -111,30 +114,35 @@ def game_updates(hra, log):
         kill_enemy = enemy.outofbounds_check(log)
         if kill_enemy:
             hra.seznam_entit["nepratele"].remove(enemy)
+        enemy.check_for_turn(hra.seznam_entit["cesty"], log)
 
 
 def game_window_draw(window, hra, log):
     window.fill(BLACK)
-    for vesnice in hra.seznam_entit["vesnice"]:
+
+    for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
+        pygame.draw.rect(window, (255, 255, 255), cesta.cesta)
+
+    for vesnice in hra.seznam_entit["vesnice"]:                                 # in dev only
         pygame.draw.rect(window, vesnice.color, vesnice.rect)
 
-    for dul in hra.seznam_entit["doly"]:
+    for dul in hra.seznam_entit["doly"]:                                 # in dev only
         pygame.draw.rect(window, dul.color, dul.rect)
 
-    for vez in hra.seznam_entit["veze"]:
+    for vez in hra.seznam_entit["veze"]:                                 # in dev only
         if vez.type == "test_tower":
             pygame.draw.rect(window, BLUE, vez.testing_rect)
         else:
             pass
 
-    for spawner in hra.seznam_entit["spawnery"]:
+    for spawner in hra.seznam_entit["spawnery"]:                                 # in dev only
         pygame.draw.rect(window, RED, spawner.rect)
 
-    for enemy in hra.seznam_entit["nepratele"]:
+    for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
         if enemy.typ_nepritele == "normal":
             stupne = preklad_na_stupne(enemy)
             window.blit(pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
-                        (enemy.location[0], enemy.location[1])
+                        (enemy.location[0] - (21/2), enemy.location[1] - (21/2))
                         )
 
     pygame.display.flip()
