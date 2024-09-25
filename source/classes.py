@@ -71,30 +71,63 @@ class Hra:
             match self.otocen_na_stranu:
                 case "dolu":
                     self.location[1] += self.speed
+                    self.rect.y += self.speed
                 case "nahoru":
                     self.location[1] -= self.speed
+                    self.rect.y -= self.speed
                 case "doprava":
                     self.location[0] += self.speed
+                    self.rect.x += self.speed
                 case "doleva":
                     self.location[0] -= self.speed
+                    self.rect.x -= self.speed
 
-        def check_for_turn(self, path_list, log):   # TODO: špatná detekce otáčení (přechod z jedné cesty na druhou?)
+        def check_for_turn(self, path_list, log):
             for path in path_list:
                 if self.rect.colliderect(path.cesta):
                     if self.otocen_na_stranu != path.turn_to:
+                        # TODO: OTESTOVAT vertikální!
                         match path.turn_to:
+
+                            # horizontální
                             case "doleva":
-                                self.otocen_na_stranu = "doleva"
-                                log.write_to_log("collision detected: doleva")
+                                if self.otocen_na_stranu == "dolu":
+                                    if path.cesta.y < self.rect.centery - 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doleva"
+                                        #log.write_to_log("collision detected: doleva")
+                                elif self.otocen_na_stranu == "nahoru":
+                                    if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doleva"
+                                        #log.write_to_log("collision detected: doleva")
                             case "doprava":
-                                self.otocen_na_stranu = "doprava"
-                                log.write_to_log("collision detected: doprava")
+                                if self.otocen_na_stranu == "dolu":
+                                    if path.cesta.y < self.rect.centery - 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doprava"
+                                        # log.write_to_log("collision detected: doleva")
+                                if self.otocen_na_stranu == "nahoru":
+                                    if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doprava"
+                                        # log.write_to_log("collision detected: doleva")
+
+                            # vertikální
                             case "dolu":
-                                self.otocen_na_stranu = "dolu"
-                                log.write_to_log("collision detected: dolu")
+                                if self.otocen_na_stranu == "doleva":
+                                    if path.cesta.x < self.rect.centerx - 10 < path.cesta.right:
+                                        self.otocen_na_stranu = "dolu"
+                                        #log.write_to_log("collision detected: dolu")
+                                if self.otocen_na_stranu == "doprava":
+                                    if path.cesta.x < self.rect.centerx + 10 < path.cesta.right:
+                                        self.otocen_na_stranu = "dolu"
+                                        #log.write_to_log("collision detected: dolu")
                             case "nahoru":
-                                self.otocen_na_stranu = "nahoru"
-                                log.write_to_log("collision detected: nahoru")
+                                if self.otocen_na_stranu == "doleva":
+                                    if path.cesta.x < self.rect.centerx - 10 < path.cesta.right:
+                                        self.otocen_na_stranu = "nahoru"
+                                        # log.write_to_log("collision detected: dolu")
+                                if self.otocen_na_stranu == "doprava":
+                                    if path.cesta.x < self.rect.centerx + 10 < path.cesta.right:
+                                        self.otocen_na_stranu = "nahoru"
+                                        # log.write_to_log("collision detected: dolu")
 
         def outofbounds_check(self, log):
             if self.location[0] < 0 or self.location[0] > 1200 or self.location[1] < 0 or self.location[1] > 800:
@@ -185,6 +218,16 @@ class Hra:
         def __init__(self, hra_instance, x, y, sirka, vyska, otocit_se_na):
             self.cesta = pygame.Rect(x, y, sirka, vyska)
             self.turn_to = otocit_se_na
+
+            match otocit_se_na:
+                case "dolu":
+                    self.rect_border = pygame.Rect(x, y, 60, 20)
+                case "nahoru":
+                    self.rect_border = pygame.Rect(x, y + vyska, 60, 20)
+                case "doprava":
+                    self.rect_border = pygame.Rect(x, y, 20, 60)
+                case "doleva":
+                    self.rect_border = pygame.Rect(x + sirka, y, 20, 60)
 
     class Vez:
         def __init__(self, typ, location):

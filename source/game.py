@@ -44,7 +44,8 @@ def load_seznam_entit(hra, log):
 
             seznam_entit["cesty"] = load_entities("cesty", hra)
 
-            # TODO: zakladny, spawnery, veze, doly, vesnice
+            # TODO: zakladny, veze, doly, vesnice
+            # spawnery teoreticky hotový
 
         case _:
             pass
@@ -144,6 +145,7 @@ def game_window_draw(window, hra, log):
             window.blit(pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
                         (enemy.location[0] - (21/2), enemy.location[1] - (21/2))
                         )
+        pygame.draw.rect(window, RED, enemy.rect)
 
     pygame.display.flip()
 
@@ -183,6 +185,3 @@ def game_main(mapa, obtiznost):
 
 if __name__ == "__main__":
     game_main(1, 1)
-
-
-# TODO: importování map, nějak, nebo, pro každou mapu zvlášť celá hra??
