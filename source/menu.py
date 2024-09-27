@@ -48,7 +48,15 @@ def menu_screen(window):
         font = pygame.font.SysFont(None, 75)
         text = font.render('MAPY', True, cerna)  
         text_rect = text.get_rect(center=(400, 100))  
-        window.blit(text, text_rect) 
+        window.blit(text, text_rect)
+        
+        mapa1 = pygame.Rect(108, 200, 180, 180)
+        pygame.draw.rect(window, cerna, mapa1)
+        mapa2 = pygame.Rect(308, 200, 180, 180)
+        pygame.draw.rect(window, cerna, mapa2)
+        mapa3 = pygame.Rect(508, 200, 180, 180)
+        pygame.draw.rect(window, cerna, mapa3)
+        
         
         pygame.display.flip()
     
