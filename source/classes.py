@@ -152,40 +152,59 @@ class Hra:
                                 if self.otocen_na_stranu == "dolu":
                                     if path.cesta.y < self.rect.centery - 10 < path.cesta.bottom:
                                         self.otocen_na_stranu = "doleva"
-                                        #log.write_to_log("collision detected: doleva")
+
                                 elif self.otocen_na_stranu == "nahoru":
                                     if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
                                         self.otocen_na_stranu = "doleva"
-                                        #log.write_to_log("collision detected: doleva")
+
                             case "doprava":
                                 if self.otocen_na_stranu == "dolu":
                                     if path.cesta.y < self.rect.centery - 10 < path.cesta.bottom:
                                         self.otocen_na_stranu = "doprava"
-                                        # log.write_to_log("collision detected: doleva")
+
                                 if self.otocen_na_stranu == "nahoru":
                                     if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
                                         self.otocen_na_stranu = "doprava"
-                                        # log.write_to_log("collision detected: doleva")
+
 
                             # vertikální
                             case "dolu":
                                 if self.otocen_na_stranu == "doleva":
                                     if path.cesta.x < self.rect.centerx + 13 < path.cesta.right:
                                         self.otocen_na_stranu = "dolu"
-                                        #log.write_to_log("collision detected: dolu")
+
                                 if self.otocen_na_stranu == "doprava":
                                     if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
                                         self.otocen_na_stranu = "dolu"
-                                        #log.write_to_log("collision detected: dolu")
+
                             case "nahoru":
                                 if self.otocen_na_stranu == "doleva":
                                     if path.cesta.x < self.rect.centerx + 13 < path.cesta.right:
                                         self.otocen_na_stranu = "nahoru"
-                                        # log.write_to_log("collision detected: dolu")
+
                                 if self.otocen_na_stranu == "doprava":
                                     if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
                                         self.otocen_na_stranu = "nahoru"
-                                        # log.write_to_log("collision detected: dolu")
+
+        def check_turn_rozcesti(self, rozcesti_list):
+            choices_hor = ("doleva", "doprava")
+            choices_ver = ("nahoru", "dolu")
+
+            for rozcesti in rozcesti_list:
+                if self.rect.colliderect(rozcesti.rect):
+                    match rozcesti.orientation:
+                        case "horizontalne":
+                            if self.otocen_na_stranu != choices_hor[0] and self.otocen_na_stranu != choices_hor[1]:
+                                if rozcesti.rect.y <= self.rect.y <= rozcesti.rect.bottom:
+                                    turn_to = random.choice(choices_hor)
+                                    self.otocen_na_stranu = turn_to
+                        case "vertikalne":
+                            if self.otocen_na_stranu != choices_ver[0] and self.otocen_na_stranu != choices_ver[1]:
+                                if rozcesti.rect.x <= self.rect.x <= rozcesti.rect.right:
+                                    turn_to = random.choice(choices_ver)
+                                    self.otocen_na_stranu = turn_to
+                        case _:
+                            pass
 
         def outofbounds_check(self, log):
             if self.spawned:
@@ -321,6 +340,16 @@ class Hra:
                     self.rect_border = pygame.Rect(x, y, 20, 60)
                 case "doleva":
                     self.rect_border = pygame.Rect(x + sirka, y, 20, 60)
+
+    class Rozcesti:     # TODO: dodělat otáčení
+        def __init__(self, x, y, strana):
+            self.orientation = strana
+
+            match strana:
+                case "horizontalne":
+                    self.rect = pygame.Rect(x, y, 130, 30)
+                case "vertikalne":
+                    self.rect = pygame.Rect(x, y, 30, 130)
 
     class Vez:
         # TODO: střílení,

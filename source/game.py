@@ -43,6 +43,10 @@ def load_seznam_entit(hra, log):
             log.write_to_log("Načteny vesnice")
 
             seznam_entit["cesty"] = load_entities("cesty", hra)
+            log.write_to_log("Načteny cesty")
+
+            seznam_entit["rozcesti"] = load_entities("rozcesti", hra)
+            log.write_to_log("Načteny rozcestí")
 
             # TODO: zakladny, veze, doly, vesnice
             #       spawnery potřebují opravit mezery u spawnu a obrázky nepřátel
@@ -138,7 +142,9 @@ def game_updates(hra, log):
             hra.seznam_entit["nepratele"].remove(enemy)
         if not enemy.spawned:
             enemy.check_to_spawn(hra.seznam_entit["spawnery"])
+
         enemy.check_for_turn(hra.seznam_entit["cesty"], log)
+        enemy.check_turn_rozcesti(hra.seznam_entit["rozcesti"])
 
         for zakladna in hra.seznam_entit["zakladny"]:
             if enemy.rect.colliderect(zakladna.rect):
@@ -149,7 +155,10 @@ def game_window_draw(window, hra, log):
     window.fill(BLACK)
 
     for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
-        pygame.draw.rect(window, (255, 255, 255), cesta.cesta)
+        pygame.draw.rect(window, WHITE, cesta.cesta)
+
+    for rozcesti in hra.seznam_entit["rozcesti"]:
+        pygame.draw.rect(window, WHITE, rozcesti.rect)
 
     for vesnice in hra.seznam_entit["vesnice"]:                                 # in dev only
         pygame.draw.rect(window, vesnice.color, vesnice.rect)
@@ -214,7 +223,7 @@ def game_main(mapa, obtiznost):
 
         # dá čas hráči pro rozkoukání
         if not time:
-            pygame.time.wait(2500)
+            #pygame.time.wait(2500)
             time = True
 
         clock.tick(FPS)

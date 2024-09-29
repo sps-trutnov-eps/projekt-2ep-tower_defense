@@ -39,7 +39,12 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Cesta(initiated_game, 145, 310, 180, 30, "doleva"),
                 initiated_game.Cesta(initiated_game, 115, 310, 30, 180, "dolu"),
                 initiated_game.Cesta(initiated_game, 115, 490, 500, 30, "doprava"),
-                initiated_game.Cesta(initiated_game, 615, 220, 30, 300, "nahoru")
+                #initiated_game.Cesta(initiated_game, 615, 220, 30, 300, "nahoru")
+
+            ]
+        case "rozcesti":
+            to_return = [
+                initiated_game.Rozcesti(615, 440, "vertikalne")
             ]
         case _:
             to_return = [
