@@ -43,11 +43,46 @@ class Hra:
         self.aktualni_vlna_dokoncena = False
 
     class Nepritel:
-        def __init__(self, typ_nepritele, spawner_location, spawner_side):
+        def __init__(self, typ_nepritele, spawner_location, spawner_side, location_offset):
+            """
+                Vytvořit nepřítele.
+
+                :type typ_nepritele: str
+                :param typ_nepritele: Typ nepřítele (např. normal, fast,..).
+
+                :type spawner_location: list
+                :param spawner_location: Umístění spawneru.
+
+                :type spawner_side: str
+                :param spawner_side: Strana na kterou je spawner otočen.
+
+                :type location_offset: int
+                :param location_offset: Hodnota udávající jak moc má být posunut.
+                                        Pozor! Program si sám přizpůsobý + a -.
+
+                :return: Nepřítel
+            """
+
             self.typ_nepritele = typ_nepritele
             self.location = [spawner_location[0] + 30, spawner_location[1] + 30]
             self.otocen_na_stranu = spawner_side
             self.rect = pygame.Rect(self.location[0] - (21/2), self.location[1] - (21/2), 27, 27)
+
+            # spawn hodnoty
+            # při spawnu se budou spawnovat pozadu, podle typu, a až poté, co projdou spawnerem se budou vykreslovat a
+            # bude možné na ně střílet
+            self.spawned = False
+            location_offset += self.rect.width
+
+            match self.otocen_na_stranu:
+                case "dolu":
+                    self.rect.y -= location_offset
+                case "nahoru":
+                    self.rect.y += location_offset
+                case "doleva":
+                    self.rect.x += location_offset
+                case "doprava":
+                    self.rect.x -= location_offset
 
             match self.typ_nepritele:
                 case "normal":
@@ -66,6 +101,13 @@ class Hra:
                     self.hp = 4
                     self.speed = 2
                     self.rect_color = (255, 0, 0)
+
+            self.speed = self.speed / 1.5
+
+        def check_to_spawn(self, spawners):
+            for spawner in spawners:
+                if self.rect.colliderect(spawner):
+                    self.spawned = True
 
         def move(self):
             match self.otocen_na_stranu:
@@ -139,6 +181,8 @@ class Hra:
 
     class Zakladna:
         def __init__(self, obtiznost, x, y):
+            # TODO: užití munice,
+            #       přicházení o HP (zakladna.hp - enemy.hp),
             match obtiznost:
                 case 1:
                     self.hp = 150
@@ -175,6 +219,7 @@ class Hra:
         def generate_wave(self, hra_instance):
             special_enemies = False
             list_of_enemies = []
+            location_offset = 0
 
             if hra_instance.wave_count >= 5:
                 special_enemies = True
@@ -192,13 +237,27 @@ class Hra:
 
             # Generate normal enemies
             for _ in range(normal_enemy_count):
-                enemy = hra_instance.Nepritel("normal", self.location, self.rotace_spawneru)
+                enemy = hra_instance.Nepritel(
+                    "normal",
+                    self.location,
+                    self.rotace_spawneru,
+                    location_offset
+                )
+
                 list_of_enemies.append(enemy)
+                location_offset += enemy.rect.width + 10
 
             # Generate special enemies
             for _ in range(max_special):
-                special_enemy = hra_instance.Nepritel(random.choice(self.special_moznosti))
+                special_enemy = hra_instance.Nepritel(
+                    random.choice(self.special_moznosti),
+                    self.location,
+                    self.rotace_spawneru,
+                    location_offset
+                )
+
                 list_of_enemies.append(special_enemy)
+                location_offset += special_enemy.rect.width + 10
 
             return list_of_enemies
 
@@ -230,6 +289,9 @@ class Hra:
                     self.rect_border = pygame.Rect(x + sirka, y, 20, 60)
 
     class Vez:
+        # TODO: střílení,
+        #       spotřeba munice,
+        #       typy věží
         def __init__(self, typ, location):
             self.type = typ
             self.location = location
@@ -239,7 +301,7 @@ class Hra:
             self.radius = 0
             self.list_of_shots = []
 
-            self.testing_rect = None
+            self.testing_rect = pygame.Rect(location[0], location[1], 25, 25)
             self.blittable = None
 
             self.define_rest_of_stats()
@@ -268,7 +330,9 @@ class Hra:
             return collides
 
         def shoot(self):
-            pass
+            match self.type:
+                case "testing_tower":
+                    pass
 
     class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
         def __init__(self, hra_instance, location: list):

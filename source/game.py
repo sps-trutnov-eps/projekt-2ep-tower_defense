@@ -45,7 +45,8 @@ def load_seznam_entit(hra, log):
             seznam_entit["cesty"] = load_entities("cesty", hra)
 
             # TODO: zakladny, veze, doly, vesnice
-            # spawnery teoreticky hotový
+            #       spawnery potřebují opravit mezery u spawnu a obrázky nepřátel
+            #       generování vln nefunguje jak má - spustí se pouze první
 
         case _:
             pass
@@ -67,23 +68,28 @@ def preklad_na_stupne(enemy):
     match strana:
         case "dolu":
             stupne = 0
-        case "":
+        case "doprava":
             stupne = 90
-        case "":
+        case "nahoru":
             stupne = 180
-        case "":
+        case "doleva":
             stupne = 270
 
     return stupne
 
 
-def try_spawning_enemies(hra):
+def try_spawning_enemies(hra, big_enough_gap):
+    big_enough_gap += 1
     for enemy_number in hra.enemies_to_spawn_count:
-        if enemy_number > 0:
-            #if previous_enemy_is_far_enough:
-            random_spawner = random.randint(0, len(hra.seznam_entit["spawnery"]) - 1)
-            hra.seznam_entit["spawnery"][random_spawner].spawn_enemy(hra.enemies_list[0])
-            hra.enemies_list[0].remove()
+        if big_enough_gap > 50:
+            if enemy_number > 0:
+                #if previous_enemy_is_far_enough:
+                random_spawner = random.randint(0, len(hra.seznam_entit["spawnery"]) - 1)
+                hra.seznam_entit["spawnery"][random_spawner].spawn_enemy(hra.enemies_list[0])
+                hra.enemies_list[0].remove()
+                big_enough_gap = 0
+
+    return big_enough_gap
 
 
 def move_enemies(list_of_enemies):
@@ -107,7 +113,7 @@ def game_updates(hra, log):
         if hra.seznam_entit["nepratele"][0]:
             pass
     except:
-        try_spawning_enemies(hra)
+        try_spawning_enemies(hra, big_enough_gap=0)
 
     move_enemies(hra.seznam_entit["nepratele"])
 
@@ -115,6 +121,8 @@ def game_updates(hra, log):
         kill_enemy = enemy.outofbounds_check(log)
         if kill_enemy:
             hra.seznam_entit["nepratele"].remove(enemy)
+        if not enemy.spawned:
+            enemy.check_to_spawn(hra.seznam_entit["spawnery"])
         enemy.check_for_turn(hra.seznam_entit["cesty"], log)
 
 
@@ -136,16 +144,18 @@ def game_window_draw(window, hra, log):
         else:
             pass
 
+    for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
+        if enemy.spawned:
+            if enemy.typ_nepritele == "normal":
+                stupne = preklad_na_stupne(enemy)
+                window.blit(
+                    pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
+                    (enemy.rect.x, enemy.rect.y)
+                )
+            #pygame.draw.rect(window, RED, enemy.rect)
+
     for spawner in hra.seznam_entit["spawnery"]:                                 # in dev only
         pygame.draw.rect(window, RED, spawner.rect)
-
-    for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
-        if enemy.typ_nepritele == "normal":
-            stupne = preklad_na_stupne(enemy)
-            window.blit(pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
-                        (enemy.location[0] - (21/2), enemy.location[1] - (21/2))
-                        )
-        pygame.draw.rect(window, RED, enemy.rect)
 
     pygame.display.flip()
 
