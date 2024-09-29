@@ -159,7 +159,7 @@ def game_window_draw(window, hra, log):
 
     for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
         if enemy.spawned:
-            pygame.draw.rect(window, RED, enemy.rect)
+            #pygame.draw.rect(window, RED, enemy.rect)  # in dev only
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
                 window.blit(

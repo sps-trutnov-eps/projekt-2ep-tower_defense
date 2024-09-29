@@ -198,14 +198,26 @@ class Hra:
 
             self.x = x
             self.y = y
+            self.fallen = False
 
             self.rect = pygame.Rect(x, y, 50, 50)
 
             # kapacita pro střelivo
             self.kapacita_streliva = 200
+            self.strelivo = {
+                "test_vez": 0,
+                "basic_vez": 0,
+                "shotgun_vez": 0,
+                "sniper_vez": 0,
+                "mega_vez": 0
+            }
 
         def enemy_attack(self, enemy):
             self.hp -= enemy.hp
+
+            if self.hp >= 0:
+                self.strelivo = []
+                self.fallen = True
 
     class Spawner:
         def __init__(self, hra_instance, location, rotace_spawneru):
@@ -311,7 +323,7 @@ class Hra:
             self.radius = 0
             self.list_of_shots = []
 
-            self.testing_rect = pygame.Rect(location[0], location[1], 25, 25)
+            #self.testing_rect = pygame.Rect(location[0], location[1], 45, 45)
             self.blittable = None
 
             self.define_rest_of_stats()
@@ -322,7 +334,7 @@ class Hra:
                     self.damage = 1
                     self.attack_cooldown = 1000     # v milisekundách
                     self.radius = 15
-                    self.testing_rect = pygame.Rect(self.location[0], self.location[1], 35, 35)
+                    self.testing_rect = pygame.Rect(self.location[0], self.location[1], 45, 45)
 
                 case _:     # v případě chyby
                     self.damage = 1
