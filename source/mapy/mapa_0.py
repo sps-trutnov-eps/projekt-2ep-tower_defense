@@ -4,7 +4,8 @@ def load_entities(entity_type, initiated_game):
         case "zakladny":
             # obtiznost, x ,y
             to_return = [
-                initiated_game.Zakladna(initiated_game.obtiznost, 605, 170)
+                initiated_game.Zakladna(initiated_game.obtiznost, 1000, 80),
+                initiated_game.Zakladna(initiated_game.obtiznost, 1025, 690)
                          ]
         case "spawnery":
             # hra_instance, x ,y
@@ -39,8 +40,21 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Cesta(initiated_game, 145, 310, 180, 30, "doleva"),
                 initiated_game.Cesta(initiated_game, 115, 310, 30, 180, "dolu"),
                 initiated_game.Cesta(initiated_game, 115, 490, 500, 30, "doprava"),
-                #initiated_game.Cesta(initiated_game, 615, 220, 30, 300, "nahoru")
+                # rozcestník
 
+                # horní cesta
+                initiated_game.Cesta(initiated_game, 615, 140, 30, 300, "nahoru"),
+                initiated_game.Cesta(initiated_game, 615, 110, 200, 30, "doprava"),
+                initiated_game.Cesta(initiated_game, 815, 110, 30, 270, "dolu"),
+                initiated_game.Cesta(initiated_game, 815, 380, 200, 30, "doprava"),
+                initiated_game.Cesta(initiated_game, 1010, 130, 30, 280, "nahoru"),
+
+                # dolní cesta
+                initiated_game.Cesta(initiated_game, 615, 570, 30, 120, "dolu"),
+                initiated_game.Cesta(initiated_game, 615, 690, 150, 30, "doprava"),
+                initiated_game.Cesta(initiated_game, 765, 600, 30, 120, "nahoru"),
+                initiated_game.Cesta(initiated_game, 765, 570, 270, 30, "doprava"),
+                initiated_game.Cesta(initiated_game, 1035, 570, 30, 120, "dolu")
             ]
         case "rozcesti":
             to_return = [
