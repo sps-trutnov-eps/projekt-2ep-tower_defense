@@ -111,7 +111,19 @@ class Hra:
         def check_to_spawn(self, spawners):
             for spawner in spawners:
                 if self.rect.colliderect(spawner):
-                    self.spawned = True
+                    match self.otocen_na_stranu:
+                        case "dolu":
+                            if self.rect.y > spawner.rect.y:
+                                self.spawned = True
+                        case "nahoru":
+                            if self.rect.y < spawner.rect.bottom:
+                                self.spawned = True
+                        case "doleva":
+                            if self.rect.x < spawner.rect.right:
+                                self.spawned = True
+                        case "doprava":
+                            if self.rect.x > spawner.rect.x:
+                                self.spawned = True
 
         def move(self):
             match self.otocen_na_stranu:
@@ -287,7 +299,7 @@ class Hra:
             pygame.draw.rect(window, (255, 255, 0), self.rect)
 
         def spawn_wave(self, hra_instance):
-            hra_instance.enemies_list.append(self.generate_wave())
+            hra_instance.enemies_list.append(self.generate_wave(hra_instance))
             return hra_instance
 
         def spawn_enemy(self, enemy_type, hra_instance):
