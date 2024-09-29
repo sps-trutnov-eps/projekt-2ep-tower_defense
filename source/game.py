@@ -25,8 +25,8 @@ def load_seznam_entit(hra, log):
     }
 
     match hra.mapa:
-        case 1:
-            from mapy.mapa_1 import load_entities
+        case 0:
+            from mapy.mapa_0 import load_entities
             seznam_entit["zakladny"] = load_entities("zakladny", hra)
             log.write_to_log("Načteny základny")
 
@@ -79,9 +79,15 @@ def preklad_na_stupne(enemy):
 
 
 def mapa_translation(mapa):
+    translation = None
+
     match mapa:
         case 1:
-            pass
+            translation = "Mapa 1"
+        case _:
+            translation = "How did we get here?"
+
+    return translation
 
 
 def try_spawning_enemies(hra, big_enough_gap):
@@ -179,6 +185,7 @@ def game_window_draw(window, hra, log):
 def game_main(mapa, obtiznost):
     from classes import Hra
 
+    time = False
     clock = pygame.time.Clock()
 
     game_window = pygame.display.set_mode((1200, 800))
@@ -205,10 +212,15 @@ def game_main(mapa, obtiznost):
 
         game_window_draw(game_window, hra, log)
 
+        # dá čas hráči pro rozkoukání
+        if not time:
+            pygame.time.wait(2500)
+            time = True
+
         clock.tick(FPS)
 
     log.write_to_log("Hra ukončena")
 
 
 if __name__ == "__main__":
-    game_main(1, 1)
+    game_main(0, 1)
