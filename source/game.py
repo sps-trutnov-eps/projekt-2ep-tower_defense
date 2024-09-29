@@ -60,7 +60,7 @@ def load_seznam_entit(hra, log):
 
 def count_entities(entity_type: str, seznam_entit):
     count = 0
-    for entity in seznam_entit[entity_type]:
+    for _ in seznam_entit[entity_type]:
         count += 1
 
     return count
@@ -83,8 +83,6 @@ def preklad_na_stupne(enemy):
 
 
 def mapa_translation(mapa):
-    translation = None
-
     match mapa:
         case 1:
             translation = "Mapa 1"
@@ -127,11 +125,7 @@ def game_updates(hra, log):
         log.write_to_log(f"Vygenerováno: {count_entities('nepratele', hra.seznam_entit)}")
         log.write_to_log(f"Vlna {hra.wave_count} úspěšně vygenerována")
 
-    # po kontrole zda nějací existují, posune nepřáteli
-    try:
-        if hra.seznam_entit["nepratele"][0]:
-            pass
-    except:
+    if not hra.seznam_entit["nepratele"][0]:
         try_spawning_enemies(hra, big_enough_gap=0)
 
     move_enemies(hra.seznam_entit["nepratele"])
@@ -151,7 +145,7 @@ def game_updates(hra, log):
                 enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna))
 
 
-def game_window_draw(window, hra, log):
+def game_window_draw(window, hra):
     window.fill(BLACK)
 
     for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
@@ -219,7 +213,7 @@ def game_main(mapa, obtiznost):
 
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra, log)
+        game_window_draw(game_window, hra)
 
         # dá čas hráči pro rozkoukání
         if not time:
