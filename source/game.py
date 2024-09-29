@@ -78,6 +78,12 @@ def preklad_na_stupne(enemy):
     return stupne
 
 
+def mapa_translation(mapa):
+    match mapa:
+        case 1:
+            pass
+
+
 def try_spawning_enemies(hra, big_enough_gap):
     big_enough_gap += 1
     for enemy_number in hra.enemies_to_spawn_count:
@@ -98,6 +104,9 @@ def move_enemies(list_of_enemies):
 
 
 def game_updates(hra, log):
+    if not hra.seznam_entit["nepratele"] and not hra.aktualni_vlna_dokoncena:
+        hra.aktualni_vlna_dokoncena = True
+
     if hra.aktualni_vlna_dokoncena:
         log.write_to_log(f"Zjištěno že není aktivní žádná vlna, spouštím vlnu: {hra.wave_count+1}")
 
@@ -125,6 +134,10 @@ def game_updates(hra, log):
             enemy.check_to_spawn(hra.seznam_entit["spawnery"])
         enemy.check_for_turn(hra.seznam_entit["cesty"], log)
 
+        for zakladna in hra.seznam_entit["zakladny"]:
+            if enemy.rect.colliderect(zakladna.rect):
+                enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna))
+
 
 def game_window_draw(window, hra, log):
     window.fill(BLACK)
@@ -146,16 +159,19 @@ def game_window_draw(window, hra, log):
 
     for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
         if enemy.spawned:
+            pygame.draw.rect(window, RED, enemy.rect)
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
                 window.blit(
                     pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
                     (enemy.rect.x, enemy.rect.y)
                 )
-            #pygame.draw.rect(window, RED, enemy.rect)
 
     for spawner in hra.seznam_entit["spawnery"]:                                 # in dev only
         pygame.draw.rect(window, RED, spawner.rect)
+
+    for zakladna in hra.seznam_entit["zakladny"]:
+        pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
 
     pygame.display.flip()
 
@@ -166,6 +182,7 @@ def game_main(mapa, obtiznost):
     clock = pygame.time.Clock()
 
     game_window = pygame.display.set_mode((1200, 800))
+    pygame.display.set_caption(f"Tower Defense - {mapa_translation(mapa)}")
     game_running = True
 
     hra = Hra(mapa, obtiznost)

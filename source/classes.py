@@ -104,6 +104,10 @@ class Hra:
 
             self.speed = self.speed / 1.5
 
+        def utok_na_zakladnu(self, hra_instance, zakladna_int):
+            hra_instance.seznam_entit["zakladny"][zakladna_int].enemy_attack(self)
+            hra_instance.seznam_entit["nepratele"].remove(self)
+
         def check_to_spawn(self, spawners):
             for spawner in spawners:
                 if self.rect.colliderect(spawner):
@@ -154,30 +158,31 @@ class Hra:
                             # vertikální
                             case "dolu":
                                 if self.otocen_na_stranu == "doleva":
-                                    if path.cesta.x < self.rect.centerx - 10 < path.cesta.right:
+                                    if path.cesta.x < self.rect.centerx + 13 < path.cesta.right:
                                         self.otocen_na_stranu = "dolu"
                                         #log.write_to_log("collision detected: dolu")
                                 if self.otocen_na_stranu == "doprava":
-                                    if path.cesta.x < self.rect.centerx + 10 < path.cesta.right:
+                                    if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
                                         self.otocen_na_stranu = "dolu"
                                         #log.write_to_log("collision detected: dolu")
                             case "nahoru":
                                 if self.otocen_na_stranu == "doleva":
-                                    if path.cesta.x < self.rect.centerx - 10 < path.cesta.right:
+                                    if path.cesta.x < self.rect.centerx + 13 < path.cesta.right:
                                         self.otocen_na_stranu = "nahoru"
                                         # log.write_to_log("collision detected: dolu")
                                 if self.otocen_na_stranu == "doprava":
-                                    if path.cesta.x < self.rect.centerx + 10 < path.cesta.right:
+                                    if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
                                         self.otocen_na_stranu = "nahoru"
                                         # log.write_to_log("collision detected: dolu")
 
         def outofbounds_check(self, log):
-            if self.location[0] < 0 or self.location[0] > 1200 or self.location[1] < 0 or self.location[1] > 800:
-                log.write_to_log("Nepřítel zjištěn mimo mapu")
-                log.write_to_log(f"Jeho souřadnice: {self.location}")
-                return True
-            else:
-                return False
+            if self.spawned:
+                if self.rect.x < 0 or self.rect.x > 1200 or self.rect.y < 0 or self.rect.y > 800:
+                    log.write_to_log("Nepřítel zjištěn mimo mapu")
+                    log.write_to_log(f"Jeho souřadnice: {self.location}")
+                    return True
+                else:
+                    return False
 
     class Zakladna:
         def __init__(self, obtiznost, x, y):
@@ -194,8 +199,13 @@ class Hra:
             self.x = x
             self.y = y
 
+            self.rect = pygame.Rect(x, y, 50, 50)
+
             # kapacita pro střelivo
             self.kapacita_streliva = 200
+
+        def enemy_attack(self, enemy):
+            self.hp -= enemy.hp
 
     class Spawner:
         def __init__(self, hra_instance, location, rotace_spawneru):

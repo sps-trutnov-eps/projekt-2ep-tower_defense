@@ -4,7 +4,7 @@ def load_entities(entity_type, initiated_game):
         case "zakladny":
             # obtiznost, x ,y
             to_return = [
-                initiated_game.Zakladna(initiated_game.obtiznost, 50, 50)
+                initiated_game.Zakladna(initiated_game.obtiznost, 605, 170)
                          ]
         case "spawnery":
             # hra_instance, x ,y
@@ -34,7 +34,12 @@ def load_entities(entity_type, initiated_game):
         case "cesty":
             to_return = [
                 initiated_game.Cesta(initiated_game, 115, 55, 30, 100, "dolu"),
-                initiated_game.Cesta(initiated_game, 115, 155, 180, 30, "doprava")
+                initiated_game.Cesta(initiated_game, 115, 155, 180, 30, "doprava"),
+                initiated_game.Cesta(initiated_game, 295, 155, 30, 180, "dolu"),
+                initiated_game.Cesta(initiated_game, 145, 310, 180, 30, "doleva"),
+                initiated_game.Cesta(initiated_game, 115, 310, 30, 180, "dolu"),
+                initiated_game.Cesta(initiated_game, 115, 490, 500, 30, "doprava"),
+                initiated_game.Cesta(initiated_game, 615, 220, 30, 300, "nahoru")
             ]
         case _:
             to_return = [
