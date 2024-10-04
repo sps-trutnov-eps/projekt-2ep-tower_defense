@@ -114,6 +114,8 @@ def move_enemies(list_of_enemies):
 
 
 def game_updates(hra, log):
+    hra.check_for_loss()
+
     if not hra.seznam_entit["nepratele"] and not hra.aktualni_vlna_dokoncena:
         hra.aktualni_vlna_dokoncena = True
 
@@ -134,8 +136,9 @@ def game_updates(hra, log):
 
     for enemy in hra.seznam_entit["nepratele"]:
         kill_enemy = enemy.outofbounds_check(log)
-        if kill_enemy:
+        if kill_enemy or enemy.hp <= 0:
             hra.seznam_entit["nepratele"].remove(enemy)
+            hra.enemies_killed += 1
         if not enemy.spawned:
             enemy.check_to_spawn(hra.seznam_entit["spawnery"])
 
@@ -144,14 +147,18 @@ def game_updates(hra, log):
 
         for zakladna in hra.seznam_entit["zakladny"]:
             if enemy.rect.colliderect(zakladna.rect):
-                enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna), log)
+                if not zakladna.fallen:
+                    enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna), log)
+
+                    if zakladna.fallen:
+                        hra.get_max_resource_count()
 
     for vez in hra.seznam_entit["veze"]:
-        vez.shoot(hra.seznam_entit["nepratele"])
+        vez.shoot(hra.seznam_entit["nepratele"], hra)
         vez.cooldown -= 1
 
 
-def game_window_draw(window, hra, text_vlna):
+def game_window_draw(window, hra, texts):
     window.fill(BLACK)
 
     for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
@@ -188,7 +195,8 @@ def game_window_draw(window, hra, text_vlna):
     for zakladna in hra.seznam_entit["zakladny"]:
         pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
 
-    window.blit(text_vlna, (1200 - text_vlna.get_width(), 800 - text_vlna.get_height()))
+    window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
+    window.blit(texts[1], (5, 800 - texts[1].get_height()))
 
     pygame.display.flip()
 
@@ -210,19 +218,26 @@ def game_main(mapa, obtiznost):
     # [ základny | spawnery | nepratele | veze | doly | vesnice ]
     log.write_to_log("Zkouším načíst entity")
     hra.seznam_entit = load_seznam_entit(hra, log)
+    hra.get_max_resource_count()
 
     log.write_to_log("Entity načteny")
 
     while game_running:
-        text_vlna = wave_text.render(f'{hra.wave_count}', False, (WHITE))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_running = False
                 log.write_to_log("Tlačítko QUIT zmáčknuto")
 
+        if hra.game_over:
+            game_running = False
+
+        text_vlna = wave_text.render(f'Vlna: {hra.wave_count}', False, WHITE)
+        text_strelivo = wave_text.render(f'Střelivo: {hra.mnozstvi_streliva}/{hra.celkova_kapacita_streliva}',
+                                         False, WHITE)
+
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra, text_vlna)
+        game_window_draw(game_window, hra, texts=[text_vlna, text_strelivo])
 
         # dá čas hráči pro rozkoukání
         if not time:
@@ -231,6 +246,26 @@ def game_main(mapa, obtiznost):
 
         clock.tick(FPS)
 
+    #                   Po skončení hry
+    ####################################################
+    big_font = pygame.font.SysFont(None, 150)
+    game_over_text = big_font.render("Konec Hry", False, BLACK)
+
+    stats_font = pygame.font.SysFont(None, 60)
+    enemies_killed = stats_font.render(f'Enemies killed: {hra.enemies_killed}', False, BLACK)
+
+    exit_menu_running = True
+    while exit_menu_running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit_menu_running = False
+                log.write_to_log("Tlačítko QUIT zmáčknuto")
+        game_window.fill(RED)
+
+        game_window.blit(game_over_text, (game_window.get_width()/2 - game_over_text.get_width() / 2,
+                                game_window.get_height()/2 - 300))
+        game_window.blit(enemies_killed, (game_window.get_width()/2 - enemies_killed.get_width() / 2, game_window.get_height()/2))
+        pygame.display.flip()
     log.write_to_log("Hra ukončena")
 
 

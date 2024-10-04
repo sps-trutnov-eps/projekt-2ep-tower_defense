@@ -7,10 +7,17 @@ class Hra:
     def __init__(self, mapa, obtiznost):
         self.mapa = mapa
         self.obtiznost = obtiznost
+        self.game_over = False
+
         self.wave_count = 0
+        self.celkova_kapacita_streliva = None
+        self.mnozstvi_streliva = 200
+
         self.seznam_entit = []
         self.enemies_list = []
         self.enemies_to_spawn_count = [0, 0, 0]      # normal enemy | fast enemy | tank
+        self.enemies_killed = 0
+
         self.seznam_cest = []
         self.aktualni_vlna_dokoncena = True
 
@@ -37,6 +44,24 @@ class Hra:
 
             case _:
                 self.base_enemy_number = 15
+
+    def get_max_resource_count(self):
+        max_count = 0
+        for zakladna in self.seznam_entit["zakladny"]:
+            max_count += zakladna.kapacita_streliva
+        self.celkova_kapacita_streliva = max_count
+
+        if self.mnozstvi_streliva > self.celkova_kapacita_streliva:
+            self.mnozstvi_streliva = self.celkova_kapacita_streliva
+
+    def check_for_loss(self):
+        zakladna_count = len(self.seznam_entit["zakladny"])
+        zakladna_check = []
+        for zakladna in self.seznam_entit["zakladny"]:
+            if zakladna.fallen:
+                zakladna_check.append(zakladna)
+        if zakladna_count == len(zakladna_check):
+            self.game_over = True
 
     def update_wave_count(self):
         self.wave_count += 1
@@ -235,19 +260,11 @@ class Hra:
 
             # kapacita pro střelivo
             self.kapacita_streliva = 200
-            self.strelivo = {
-                "test_vez": 0,
-                "basic_vez": 0,
-                "shotgun_vez": 0,
-                "sniper_vez": 0,
-                "mega_vez": 0
-            }
 
         def enemy_attack(self, enemy, log):
             self.hp -= enemy.hp
 
             if self.hp >= 0:
-                self.strelivo = []
                 self.fallen = True
                 log.write_to_log("Základna padla!")
 
@@ -373,16 +390,15 @@ class Hra:
         def define_rest_of_stats(self):
             match self.type:
                 case "test_tower":
-                    self.damage = 2
-                    self.attack_cooldown = 1000 # v milisekundách
-                    self.cooldown = 1000    
-                    self.radius = 100
+                    self.damage = 5
+                    self.attack_cooldown = 100 # v fpskách?
+                    self.radius = 200
                     self.testing_rect = pygame.Rect(self.location[0], self.location[1], 45, 45)
 
                 case _:     # v případě chyby
-                    self.damage = 2
-                    self.attack_cooldown = 1000
-                    self.radius = 100
+                    self.damage = 5
+                    self.attack_cooldown = 100
+                    self.radius = 200
 
         def placement_check(self, hra_instance, location: list):      # will require a check when used, whether it can be placed
             location_rectangle = pygame.Rect(location[0], location[1], 1, 1)
@@ -394,37 +410,39 @@ class Hra:
 
             return collides
 
-        def shoot(self, seznam_nepratel):
+        def shoot(self, seznam_nepratel, hra_instance):
             if self.cooldown < 1:
-                print("cooldown na nule")
                 closest_enemy = self.find_closest_enemy(seznam_nepratel)
-                if closest_enemy:
-                    self.shooting
+                if closest_enemy is not None:
                     closest_enemy.hp -= self.damage
                     self.cooldown = self.attack_cooldown
+
+                    hra_instance.mnozstvi_streliva -= 1
+
                     print("shot an enemy!")
                     print(closest_enemy.hp)
 
-        def shooting(self):
-            print("shooting")
+        def shooting(self):     # vzhledově
+            pass
 
         def find_closest_enemy(self, seznam_nepratel):
+            if not seznam_nepratel:
+                return None
+
             closest = seznam_nepratel[0]
             closest_dist = math.isqrt(abs(seznam_nepratel[0].rect.centerx - self.testing_rect.centerx)**2 + abs(seznam_nepratel[0].rect.centery - self.testing_rect.centery)**2)
             for enemy in seznam_nepratel:
-                distanceX = abs(enemy.rect.centerx - self.testing_rect.centerx) 
-                distanceY = abs(enemy.rect.centery - self.testing_rect.centery)
+                x = abs(enemy.rect.centerx - self.testing_rect.centerx)
+                y = abs(enemy.rect.centery - self.testing_rect.centery)
 
-                distance = math.isqrt(distanceX**2 + distanceY**2)
+                distance = math.isqrt(x**2 + y**2)
                 if closest_dist > distance:
                     closest_dist = distance
                     closest = enemy
             if closest_dist < self.radius:
                 return closest
             else:
-                print(closest_dist)
                 return None
-
 
     class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
         def __init__(self, hra_instance, location: list):
