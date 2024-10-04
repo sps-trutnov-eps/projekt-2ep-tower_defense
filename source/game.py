@@ -1,6 +1,8 @@
 import pygame
+pygame.font.init()
 import random
 
+wave_text = pygame.font.SysFont(None, 50)
 
 # barvičky
 BLACK = (0, 0, 0)
@@ -142,10 +144,14 @@ def game_updates(hra, log):
 
         for zakladna in hra.seznam_entit["zakladny"]:
             if enemy.rect.colliderect(zakladna.rect):
-                enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna))
+                enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna), log)
+
+    for vez in hra.seznam_entit["veze"]:
+        vez.shoot(hra.seznam_entit["nepratele"])
+        vez.cooldown -= 1
 
 
-def game_window_draw(window, hra):
+def game_window_draw(window, hra, text_vlna):
     window.fill(BLACK)
 
     for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
@@ -168,7 +174,7 @@ def game_window_draw(window, hra):
 
     for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
         if enemy.spawned:
-            #pygame.draw.rect(window, RED, enemy.rect)  # in dev only
+            pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
                 window.blit(
@@ -181,6 +187,8 @@ def game_window_draw(window, hra):
 
     for zakladna in hra.seznam_entit["zakladny"]:
         pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
+
+    window.blit(text_vlna, (1200 - text_vlna.get_width(), 800 - text_vlna.get_height()))
 
     pygame.display.flip()
 
@@ -206,6 +214,7 @@ def game_main(mapa, obtiznost):
     log.write_to_log("Entity načteny")
 
     while game_running:
+        text_vlna = wave_text.render(f'{hra.wave_count}', False, (WHITE))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_running = False
@@ -213,7 +222,7 @@ def game_main(mapa, obtiznost):
 
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra)
+        game_window_draw(game_window, hra, text_vlna)
 
         # dá čas hráči pro rozkoukání
         if not time:
