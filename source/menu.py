@@ -41,6 +41,9 @@ def menu_screen(window):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if mapa1.collidepoint(event.pos):
+                    menu_mapa1(window)
         
         
         window.fill(bila)
@@ -57,6 +60,25 @@ def menu_screen(window):
         mapa3 = pygame.Rect(508, 200, 180, 180)
         pygame.draw.rect(window, cerna, mapa3)
         
+        
+        pygame.display.flip()
+        
+        
+        
+def menu_mapa1(window):
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+                
+        
+        window.fill(bila)
+        
+        font = pygame.font.SysFont(None, 140)
+        text = font.render('MAPA 1', True, cerna)
+        text_rect = text.get_rect(center=(400, 100))
+        window.blit(text, text_rect)
         
         pygame.display.flip()
     
