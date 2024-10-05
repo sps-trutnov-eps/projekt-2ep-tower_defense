@@ -56,6 +56,10 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Cesta(initiated_game, 765, 570, 270, 30, "doprava"),
                 initiated_game.Cesta(initiated_game, 1035, 570, 30, 120, "dolu")
             ]
+        case "skryte_cesty":
+            to_return = [
+                initiated_game.Cesta(initiated_game, 1010, 100, 100, 30, "doleva")
+            ]
         case "rozcesti":
             to_return = [
                 initiated_game.Rozcesti(615, 440, "vertikalne")

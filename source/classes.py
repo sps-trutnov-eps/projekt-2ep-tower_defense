@@ -98,6 +98,7 @@ class Hra:
             # bude možné na ně střílet
             self.spawned = False
             location_offset += self.rect.width
+            self.reverse_direction = False
 
             match self.otocen_na_stranu:
                 case "dolu":
@@ -127,7 +128,7 @@ class Hra:
                     self.speed = 2
                     self.rect_color = (255, 0, 0)
 
-            self.speed = self.speed  / 1.5
+            self.speed = self.speed / 1.5
 
         def utok_na_zakladnu(self, hra_instance, zakladna_int, log):
             hra_instance.seznam_entit["zakladny"][zakladna_int].enemy_attack(self, log)
@@ -165,7 +166,7 @@ class Hra:
                     self.location[0] -= self.speed
                     self.rect.x -= self.speed
 
-        def check_for_turn(self, path_list, log):
+        def check_for_turn(self, path_list):
             for path in path_list:
                 if self.rect.colliderect(path.cesta):
                     if self.otocen_na_stranu != path.turn_to:
@@ -211,6 +212,55 @@ class Hra:
                                     if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
                                         self.otocen_na_stranu = "nahoru"
 
+        def check_for_reverse_turn(self, path_list):
+            collided = False
+            for path in path_list:
+                if self.rect.colliderect(path.cesta):
+                    collided = True
+                    if self.otocen_na_stranu != path.turn_to:
+                        # TODO: OTESTOVAT vertikální!
+                        match path.turn_to:
+
+                            # horizontální
+                            case "doleva":
+                                if self.otocen_na_stranu == "dolu":
+                                    if path.cesta.y < self.rect.centery - 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doprava"
+
+                                elif self.otocen_na_stranu == "nahoru":
+                                    if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doprava"
+
+                            case "doprava":
+                                if self.otocen_na_stranu == "dolu":
+                                    if path.cesta.y < self.rect.centery - 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doleva"
+
+                                if self.otocen_na_stranu == "nahoru":
+                                    if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
+                                        self.otocen_na_stranu = "doleva"
+
+                            # vertikální
+                            case "dolu":
+                                if self.otocen_na_stranu == "doleva":
+                                    if path.cesta.x < self.rect.centerx + 13 < path.cesta.right:
+                                        self.otocen_na_stranu = "nahoru"
+
+                                if self.otocen_na_stranu == "doprava":
+                                    if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
+                                        self.otocen_na_stranu = "nahoru"
+
+                            case "nahoru":
+                                if self.otocen_na_stranu == "doleva":
+                                    if path.cesta.x < self.rect.centerx + 13 < path.cesta.right:
+                                        self.otocen_na_stranu = "dolu"
+
+                                if self.otocen_na_stranu == "doprava":
+                                    if path.cesta.x < self.rect.centerx - 13 < path.cesta.right:
+                                        self.otocen_na_stranu = "dolu"
+            if collided:
+                self.reverse_direction = False
+
         def check_turn_rozcesti(self, rozcesti_list):
             choices_hor = ("doleva", "doprava")
             choices_ver = ("nahoru", "dolu")
@@ -223,11 +273,13 @@ class Hra:
                                 if rozcesti.rect.y <= self.rect.y <= rozcesti.rect.bottom:
                                     turn_to = random.choice(choices_hor)
                                     self.otocen_na_stranu = turn_to
+                                    self.reverse_direction = False
                         case "vertikalne":
                             if self.otocen_na_stranu != choices_ver[0] and self.otocen_na_stranu != choices_ver[1]:
                                 if rozcesti.rect.x <= self.rect.x <= rozcesti.rect.right:
                                     turn_to = random.choice(choices_ver)
                                     self.otocen_na_stranu = turn_to
+                                    self.reverse_direction = False
                         case _:
                             pass
 
@@ -246,7 +298,7 @@ class Hra:
             #       přicházení o HP (zakladna.hp - enemy.hp),
             match obtiznost:
                 case 1:
-                    self.hp = 150
+                    self.hp = 5
                 case 2:
                     self.hp = 125
                 case 3:
@@ -263,8 +315,7 @@ class Hra:
 
         def enemy_attack(self, enemy, log):
             self.hp -= enemy.hp
-
-            if self.hp >= 0:
+            if self.hp <= 0:
                 self.fallen = True
                 log.write_to_log("Základna padla!")
 

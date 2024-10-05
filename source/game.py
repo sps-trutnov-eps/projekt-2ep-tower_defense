@@ -23,7 +23,8 @@ def load_seznam_entit(hra, log):
         "veze": [],
         "doly": [],
         "vesnice": [],
-        "cesty": []
+        "cesty": [],
+        "skryte_cesty": []
     }
 
     match hra.mapa:
@@ -46,6 +47,8 @@ def load_seznam_entit(hra, log):
 
             seznam_entit["cesty"] = load_entities("cesty", hra)
             log.write_to_log("Načteny cesty")
+
+            seznam_entit["skryte_cesty"] = load_entities("skryte_cesty", hra)
 
             seznam_entit["rozcesti"] = load_entities("rozcesti", hra)
             log.write_to_log("Načteny rozcestí")
@@ -142,11 +145,30 @@ def game_updates(hra, log):
         if not enemy.spawned:
             enemy.check_to_spawn(hra.seznam_entit["spawnery"])
 
-        enemy.check_for_turn(hra.seznam_entit["cesty"], log)
+        if not enemy.reverse_direction:
+            enemy.check_for_turn(hra.seznam_entit["cesty"])
+        else:
+            #enemy.check_for_reverse_turn(hra.seznam_entit["cesty"])
+            enemy.check_for_turn(hra.seznam_entit["skryte_cesty"])
+
         enemy.check_turn_rozcesti(hra.seznam_entit["rozcesti"])
 
         for zakladna in hra.seznam_entit["zakladny"]:
             if enemy.rect.colliderect(zakladna.rect):
+                """
+                if zakladna.fallen and not enemy.reverse_direction:
+                    enemy.reverse_direction = True
+
+                    match enemy.otocen_na_stranu:
+                        case "nahoru":
+                            enemy.otocen_na_stranu = "dolu"
+                        case "dolu":
+                            enemy.otocen_na_stranu = "nahoru"
+                        case "doleva":
+                            enemy.otocen_na_stranu = "doprava"
+                        case "doprava":
+                            enemy.otocen_na_stranu = "doleva"
+                """
                 if not zakladna.fallen:
                     enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna), log)
 
