@@ -32,7 +32,7 @@ class Hra:
         self.vesnice_textura = None
 
         self.vez_1_textura = None
-        self.vez_2_textura = None
+        self.vez_2_textura = pygame.image.load("obrazky/vez1.png")
 
         match self.obtiznost:
             case 1:
@@ -419,7 +419,7 @@ class Hra:
         # TODO: střílení,
         #       spotřeba munice,
         #       typy věží
-        def __init__(self, typ, location):
+        def __init__(self, typ, location, hra_instance):
             self.type = typ
             self.location = location
 
@@ -431,15 +431,16 @@ class Hra:
             #self.testing_rect = pygame.Rect(location[0], location[1], 45, 45)
             self.blittable = None
 
-            self.define_rest_of_stats()
+            self.define_rest_of_stats(hra_instance)
 
-        def define_rest_of_stats(self):
+        def define_rest_of_stats(self, hra_instance):
             match self.type:
                 case "test_tower":
                     self.damage = 5
                     self.attack_cooldown = 100 # v fpskách?
                     self.radius = 200
                     self.testing_rect = pygame.Rect(self.location[0], self.location[1], 45, 45)
+                    self.blittable = hra_instance.vez_2_textura
 
                 case _:     # v případě chyby
                     self.damage = 5

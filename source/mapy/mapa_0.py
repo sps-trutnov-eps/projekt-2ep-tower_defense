@@ -20,8 +20,8 @@ def load_entities(entity_type, initiated_game):
         case "veze":
             # typ, (x, y)
             to_return = [
-                initiated_game.Vez("test_tower", (350, 250)),
-                initiated_game.Vez("test_tower", (950, 650))    # dočasná
+                initiated_game.Vez("test_tower", (350, 250), initiated_game),
+                initiated_game.Vez("test_tower", (950, 650), initiated_game)    # dočasná
             ]
         case "doly":
             #

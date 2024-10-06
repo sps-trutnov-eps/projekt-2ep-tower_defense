@@ -200,6 +200,7 @@ def game_window_draw(window, hra, texts):
     for vez in hra.seznam_entit["veze"]:                                 # in dev only
         if vez.type == "test_tower":
             pygame.draw.rect(window, BLUE, vez.testing_rect)
+            window.blit(vez.blittable, vez.location)
         else:
             pass
 
