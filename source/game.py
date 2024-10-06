@@ -198,11 +198,18 @@ def game_window_draw(window, hra, texts):
         pygame.draw.rect(window, dul.color, dul.rect)
 
     for vez in hra.seznam_entit["veze"]:                                 # in dev only
-        if vez.type == "test_tower":
-            pygame.draw.rect(window, BLUE, vez.testing_rect)
-            window.blit(vez.blittable, vez.location)
-        else:
+        if vez.type == "normal_tower":
             pass
+            #window.blit(vez.blittable, vez.location)
+        elif vez.type == "speedy_tower":
+            window.blit(vez.blittable, vez.location)
+        elif vez.type == "sniper_tower":
+            pass
+            #window.blit(vez.blittable, vez.location)
+        elif vez.type == "test_tower":
+            pygame.draw.rect(window, BLUE, vez.testing_rect)
+        else:
+            pygame.draw.rect(window, BLUE, vez.testing_rect)
 
     for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
         if enemy.spawned:
