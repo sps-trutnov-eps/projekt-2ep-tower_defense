@@ -7,6 +7,7 @@ wave_text = pygame.font.SysFont(None, 50)
 # barvičky
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+GRAY = (30, 30, 30)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
@@ -145,11 +146,9 @@ def game_updates(hra, log):
         if not enemy.spawned:
             enemy.check_to_spawn(hra.seznam_entit["spawnery"])
 
-        if not enemy.reverse_direction:
-            enemy.check_for_turn(hra.seznam_entit["cesty"])
-        else:
-            #enemy.check_for_reverse_turn(hra.seznam_entit["cesty"])
-            enemy.check_for_turn(hra.seznam_entit["skryte_cesty"])
+        enemy.check_for_turn(hra.seznam_entit["cesty"])
+
+        enemy.check_for_turn(hra.seznam_entit["skryte_cesty"])
 
         enemy.check_turn_rozcesti(hra.seznam_entit["rozcesti"])
 
@@ -185,6 +184,9 @@ def game_window_draw(window, hra, texts):
 
     for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
         pygame.draw.rect(window, WHITE, cesta.cesta)
+
+    for cesta in hra.seznam_entit["skryte_cesty"]:  # in dev only
+        pygame.draw.rect(window, GRAY, cesta.cesta)
 
     for rozcesti in hra.seznam_entit["rozcesti"]:
         pygame.draw.rect(window, WHITE, rozcesti.rect)

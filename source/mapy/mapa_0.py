@@ -20,7 +20,8 @@ def load_entities(entity_type, initiated_game):
         case "veze":
             # typ, (x, y)
             to_return = [
-                initiated_game.Vez("test_tower", (350, 250))   # dočasná
+                initiated_game.Vez("test_tower", (350, 250)),
+                initiated_game.Vez("test_tower", (950, 650))    # dočasná
             ]
         case "doly":
             #
@@ -56,9 +57,11 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Cesta(initiated_game, 765, 570, 270, 30, "doprava"),
                 initiated_game.Cesta(initiated_game, 1035, 570, 30, 120, "dolu")
             ]
-        case "skryte_cesty":
+        case "skryte_cesty":        # Když je základna zničená, tak chodí po "skrýté" cestě, která vede k další základně
             to_return = [
-                initiated_game.Cesta(initiated_game, 1010, 100, 100, 30, "doleva")
+                initiated_game.Cesta(initiated_game, 1010, 90, 100, 30, "doprava"),     # TODO: to ale funguje jen z jedný strany??
+                initiated_game.Cesta(initiated_game, 1110, 90, 30, 610, "dolu"),
+                initiated_game.Cesta(initiated_game, 1070, 700, 70, 30, "doleva")
             ]
         case "rozcesti":
             to_return = [
