@@ -54,9 +54,7 @@ def load_seznam_entit(hra, log):
             seznam_entit["rozcesti"] = load_entities("rozcesti", hra)
             log.write_to_log("Načteny rozcestí")
 
-            # TODO: zakladny, veze, doly, vesnice
-            #       spawnery potřebují opravit mezery u spawnu a obrázky nepřátel
-            #       generování vln nefunguje jak má - spustí se pouze první
+            # TODO: veze, doly, vesnice
 
         case _:
             pass
@@ -103,7 +101,6 @@ def try_spawning_enemies(hra, big_enough_gap):
     for enemy_number in hra.enemies_to_spawn_count:
         if big_enough_gap > 50:
             if enemy_number > 0:
-                #if previous_enemy_is_far_enough:
                 random_spawner = random.randint(0, len(hra.seznam_entit["spawnery"]) - 1)
                 hra.seznam_entit["spawnery"][random_spawner].spawn_enemy(hra.enemies_list[0])
                 hra.enemies_list[0].remove()

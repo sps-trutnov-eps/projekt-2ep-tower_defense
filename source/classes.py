@@ -482,9 +482,6 @@ class Hra:
 
                     hra_instance.mnozstvi_streliva -= 1
 
-                    print("shot an enemy!")
-                    print(closest_enemy.hp)
-
         def shooting(self):     # vzhledově
             pass
 
