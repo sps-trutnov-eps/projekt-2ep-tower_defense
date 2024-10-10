@@ -274,7 +274,6 @@ class Hra:
                                 if rozcesti.rect.x <= self.rect.x <= rozcesti.rect.right:
                                     turn_to = random.choice(choices_ver)
                                     self.otocen_na_stranu = turn_to
-                                    self.otocen_na_stranu = "nahoru"    # TODO: testy!! vrátit zpět
                         case _:
                             pass
 
@@ -293,7 +292,7 @@ class Hra:
             #       přicházení o HP (zakladna.hp - enemy.hp),
             match obtiznost:
                 case 1:
-                    self.hp = 5
+                    self.hp = 150
                 case 2:
                     self.hp = 125
                 case 3:
