@@ -476,10 +476,11 @@ class Hra:
             if self.cooldown < 1:
                 closest_enemy = self.find_closest_enemy(seznam_nepratel)
                 if closest_enemy is not None:
-                    closest_enemy.hp -= self.damage
-                    self.cooldown = self.attack_cooldown
+                    if hra_instance.mnozstvi_streliva > 0:
+                        closest_enemy.hp -= self.damage
+                        self.cooldown = self.attack_cooldown
 
-                    hra_instance.mnozstvi_streliva -= 1
+                        hra_instance.mnozstvi_streliva -= 1
 
         def shooting(self):     # vzhledově
             pass
