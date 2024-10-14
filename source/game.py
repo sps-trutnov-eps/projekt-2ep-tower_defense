@@ -109,12 +109,10 @@ def try_spawning_enemies(hra, big_enough_gap):
     return big_enough_gap
 
 
-def move_enemies(list_of_enemies):
+def move_enemies(list_of_enemies):  # TODO: odstranit printy
     for enemy in list_of_enemies:
         enemy.move()
-        if enemy.typ_nepritele == "tank":
-            print("tank")
-            print(f"HP: {enemy.hp} - X;Y {enemy.rect.x};{enemy.rect.y} - orientace: {enemy.otocen_na_stranu}")
+        print(f"X;Y {enemy.rect.x};{enemy.rect.y}")
 
 
 def game_updates(hra, log):

@@ -100,16 +100,15 @@ class Hra:
             self.spawned = False
             location_offset += self.rect.width
 
-            if self.typ_nepritele != "tank":
-                match self.otocen_na_stranu:
-                    case "dolu":
-                        self.rect.y -= location_offset
-                    case "nahoru":
-                        self.rect.y += location_offset
-                    case "doleva":
-                        self.rect.x += location_offset
-                    case "doprava":
-                        self.rect.x -= location_offset
+            match self.otocen_na_stranu:
+                case "dolu":
+                    self.rect.y -= location_offset
+                case "nahoru":
+                    self.rect.y += location_offset
+                case "doleva":
+                    self.rect.x += location_offset
+                case "doprava":
+                    self.rect.x -= location_offset
 
             match self.typ_nepritele:   # TODO: problém u tanku s rychlostí
                 case "normal":
@@ -152,7 +151,8 @@ class Hra:
                             if self.rect.x > spawner.rect.x:
                                 self.spawned = True
 
-        def move(self):
+        """
+        def move(self):     # Nový, nefunguje, jsou v sobě
             match self.otocen_na_stranu:
                 case "dolu":
                     self.location[1] += self.speed
@@ -163,14 +163,29 @@ class Hra:
                 case "doleva":
                     self.location[0] -= self.speed
 
-            self.rect.x = math.floor(self.location[0])
-            self.rect.y = math.floor(self.location[1])
+            self.rect.x = int(self.location[0])
+            self.rect.y = int(self.location[1])
+        """
+
+        def move(self):     # původní, funguje, krom tanků
+            match self.otocen_na_stranu:
+                case "dolu":
+                    self.location[1] += self.speed
+                    self.rect.y += self.speed
+                case "nahoru":
+                    self.location[1] -= self.speed
+                    self.rect.y -= self.speed
+                case "doprava":
+                    self.location[0] += self.speed
+                    self.rect.x += self.speed
+                case "doleva":
+                    self.location[0] -= self.speed
+                    self.rect.x -= self.speed
 
         def check_for_turn(self, path_list):
             for path in path_list:
                 if self.rect.colliderect(path.cesta):
                     if self.otocen_na_stranu != path.turn_to:
-                        # TODO: OTESTOVAT vertikální!
                         match path.turn_to:
 
                             # horizontální
@@ -191,7 +206,6 @@ class Hra:
                                 if self.otocen_na_stranu == "nahoru":
                                     if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
                                         self.otocen_na_stranu = "doprava"
-
 
                             # vertikální
                             case "dolu":
@@ -216,7 +230,6 @@ class Hra:
             for path in path_list:
                 if self.rect.colliderect(path.cesta):
                     if self.otocen_na_stranu != path.turn_to:
-                        # TODO: OTESTOVAT vertikální!
                         match path.turn_to:
 
                             # horizontální
@@ -237,7 +250,6 @@ class Hra:
                                 if self.otocen_na_stranu == "nahoru":
                                     if path.cesta.y < self.rect.centery + 10 < path.cesta.bottom:
                                         self.otocen_na_stranu = "doprava"
-
 
                             # vertikální
                             case "dolu":
@@ -289,8 +301,6 @@ class Hra:
 
     class Zakladna:
         def __init__(self, obtiznost, x, y):
-            # TODO: užití munice,
-            #       přicházení o HP (zakladna.hp - enemy.hp),
             match obtiznost:
                 case 1:
                     self.hp = 150
@@ -364,6 +374,7 @@ class Hra:
 
                 list_of_enemies.append(enemy)
                 location_offset += enemy.rect.width + 10
+                print(location_offset)
 
             # Generate special enemies
             for _ in range(max_special):
@@ -376,6 +387,7 @@ class Hra:
 
                 list_of_enemies.append(special_enemy)
                 location_offset += special_enemy.rect.width + 10
+                print(location_offset)
 
             return list_of_enemies
 
