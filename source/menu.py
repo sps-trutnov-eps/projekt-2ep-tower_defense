@@ -80,7 +80,7 @@ def menu_mapa1(window):
         window.fill(bila)
         
         font = pygame.font.SysFont(None, 140)
-        text = font.render('MAPA 1', True, cerna)
+        text = font.render('OBTÍŽNOSTI', True, cerna)
         text_rect = text.get_rect(center=(400, 100))
         window.blit(text, text_rect)
         
@@ -98,7 +98,7 @@ def menu_mapa2(window):
         window.fill(bila)
         
         font = pygame.font.SysFont(None, 140)
-        text = font.render('MAPA 2', True, cerna)
+        text = font.render('OBTÍŽNOSTI', True, cerna)
         text_rect = text.get_rect(center=(400, 100))
         window.blit(text, text_rect)
         
@@ -115,7 +115,7 @@ def menu_mapa3(window):
         window.fill(bila)
         
         font = pygame.font.SysFont(None, 140)
-        text = font.render('MAPA 3', True, cerna)
+        text = font.render('OBTÍŽNOSTI', True, cerna)
         text_rect = text.get_rect(center=(400, 100))
         window.blit(text, text_rect)
         
