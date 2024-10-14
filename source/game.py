@@ -112,10 +112,13 @@ def try_spawning_enemies(hra, big_enough_gap):
 def move_enemies(list_of_enemies):
     for enemy in list_of_enemies:
         enemy.move()
+        if enemy.typ_nepritele == "tank":
+            print("tank")
+            print(f"HP: {enemy.hp} - X;Y {enemy.rect.x};{enemy.rect.y} - orientace: {enemy.otocen_na_stranu}")
 
 
 def game_updates(hra, log):
-    hra.check_for_loss()
+    hra.check_for_loss(log)
 
     if not hra.seznam_entit["nepratele"] and not hra.aktualni_vlna_dokoncena:
         hra.aktualni_vlna_dokoncena = True
@@ -126,6 +129,8 @@ def game_updates(hra, log):
         for spawner in hra.seznam_entit["spawnery"]:
             spawner.make_wave(hra)
         hra.update_wave_count()
+        if hra.wave_count != 1:
+            hra.mnozstvi_streliva += 15
 
         log.write_to_log(f"Vygenerováno: {count_entities('nepratele', hra.seznam_entit)}")
         log.write_to_log(f"Vlna {hra.wave_count} úspěšně vygenerována")
@@ -210,7 +215,9 @@ def game_window_draw(window, hra, texts):
 
     for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
         if enemy.spawned:
-            pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
+            if enemy.rect_color != RED:
+                pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
+            
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
                 window.blit(
@@ -274,6 +281,7 @@ def game_main(mapa, obtiznost):
             time = True
 
         clock.tick(FPS)
+
 
     #                   Po skončení hry
     ####################################################

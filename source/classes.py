@@ -54,13 +54,14 @@ class Hra:
         if self.mnozstvi_streliva > self.celkova_kapacita_streliva:
             self.mnozstvi_streliva = self.celkova_kapacita_streliva
 
-    def check_for_loss(self):
+    def check_for_loss(self, log):
         zakladna_count = len(self.seznam_entit["zakladny"])
         zakladna_check = []
         for zakladna in self.seznam_entit["zakladny"]:
             if zakladna.fallen:
                 zakladna_check.append(zakladna)
         if zakladna_count == len(zakladna_check):
+            log.write_to_log(f"Zjištěno padlých základen: {zakladna_count}")
             self.game_over = True
 
     def update_wave_count(self):
@@ -99,17 +100,18 @@ class Hra:
             self.spawned = False
             location_offset += self.rect.width
 
-            match self.otocen_na_stranu:
-                case "dolu":
-                    self.rect.y -= location_offset
-                case "nahoru":
-                    self.rect.y += location_offset
-                case "doleva":
-                    self.rect.x += location_offset
-                case "doprava":
-                    self.rect.x -= location_offset
+            if self.typ_nepritele != "tank":
+                match self.otocen_na_stranu:
+                    case "dolu":
+                        self.rect.y -= location_offset
+                    case "nahoru":
+                        self.rect.y += location_offset
+                    case "doleva":
+                        self.rect.x += location_offset
+                    case "doprava":
+                        self.rect.x -= location_offset
 
-            match self.typ_nepritele:
+            match self.typ_nepritele:   # TODO: problém u tanku s rychlostí
                 case "normal":
                     self.hp = 4
                     self.speed = 2
@@ -120,7 +122,7 @@ class Hra:
                     self.rect_color = (255, 255, 0)
                 case "tank":
                     self.hp = 10
-                    self.speed = 0.5
+                    self.speed = 1
                     self.rect_color = (0, 0, 0)
                 case _:
                     self.hp = 4
@@ -154,16 +156,15 @@ class Hra:
             match self.otocen_na_stranu:
                 case "dolu":
                     self.location[1] += self.speed
-                    self.rect.y += self.speed
                 case "nahoru":
                     self.location[1] -= self.speed
-                    self.rect.y -= self.speed
                 case "doprava":
                     self.location[0] += self.speed
-                    self.rect.x += self.speed
                 case "doleva":
                     self.location[0] -= self.speed
-                    self.rect.x -= self.speed
+
+            self.rect.x = math.floor(self.location[0])
+            self.rect.y = math.floor(self.location[1])
 
         def check_for_turn(self, path_list):
             for path in path_list:
@@ -340,6 +341,7 @@ class Hra:
             if hra_instance.wave_count >= 5:
                 special_enemies = True
 
+            special_enemies = True
             total_enemy_number = hra_instance.base_enemy_number + (hra_instance.wave_count * 5)
 
             max_special = 0
