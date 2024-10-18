@@ -3,6 +3,7 @@ pygame.font.init()
 import random
 
 wave_text = pygame.font.SysFont(None, 50)
+menu_text = pygame.font.SysFont(None, 30)
 
 # barvičky
 BLACK = (0, 0, 0)
@@ -185,6 +186,21 @@ def game_updates(hra, log):
         vez.cooldown -= 1
 
 
+def draw_menu(window, hra, texts):
+    # rámeček
+    pygame.draw.rect(window, (WHITE), (90, 0, 2, 1200))
+
+    # stats (náboje, peníze, životy??)
+    window.blit(texts[3], (45 - texts[3].get_width() / 2, 10))
+    window.blit(texts[4], (45 - texts[4].get_width() / 2, 45))
+    window.blit(texts[5], (45 - texts[5].get_width() / 2, 80))
+
+    # Velký text, není potřeba
+    #window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
+    #window.blit(texts[1], (100, 800 - texts[1].get_height()))
+    #window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
+
+
 def game_window_draw(window, hra, texts):
     window.fill(BLACK)
 
@@ -235,9 +251,7 @@ def game_window_draw(window, hra, texts):
     for zakladna in hra.seznam_entit["zakladny"]:
         pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
 
-    window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
-    window.blit(texts[1], (100, 800 - texts[1].get_height()))
-    window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
+    draw_menu(window, hra, texts)
 
     pygame.display.flip()
 
@@ -251,6 +265,8 @@ def game_main(mapa, obtiznost):
     game_window = pygame.display.set_mode((1200, 800))
     pygame.display.set_caption(f"Tower Defense - {mapa_translation(mapa)}")
     game_running = True
+
+    current_action = None
 
     hra = Hra(mapa, obtiznost)
     log = hra.Logging()
@@ -277,9 +293,13 @@ def game_main(mapa, obtiznost):
                                          False, WHITE)
         text_penize = wave_text.render(f'Peníze: {hra.penezenka}', False, WHITE)
 
+        text_menu_wave_count = menu_text.render(f"{hra.wave_count}", False, WHITE)
+        text_menu_strelivo = menu_text.render(f"{hra.mnozstvi_streliva}/{hra.celkova_kapacita_streliva}", False, WHITE)
+        text_menu_penize = menu_text.render(f"{hra.penezenka}", False, WHITE)
+
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra, texts=[text_vlna, text_strelivo, text_penize])
+        game_window_draw(game_window, hra, texts=[text_vlna, text_strelivo, text_penize, text_menu_wave_count, text_menu_penize, text_menu_strelivo])
 
         # dá čas hráči pro rozkoukání
         if not time:
