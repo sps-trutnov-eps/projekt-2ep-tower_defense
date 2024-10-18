@@ -338,7 +338,6 @@ class Hra:
             if hra_instance.wave_count >= 5:
                 special_enemies = True
 
-            special_enemies = True
             total_enemy_number = hra_instance.base_enemy_number + (hra_instance.wave_count * 5)
 
             max_special = 0
