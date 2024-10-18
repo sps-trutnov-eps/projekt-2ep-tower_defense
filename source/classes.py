@@ -110,7 +110,7 @@ class Hra:
                 case "doprava":
                     self.location[0] -= location_offset
 
-            match self.typ_nepritele:   # TODO: problém u tanku s rychlostí
+            match self.typ_nepritele:
                 case "normal":
                     self.hp = 4
                     self.speed = 2
@@ -401,7 +401,7 @@ class Hra:
                 case "doleva":
                     self.rect_border = pygame.Rect(x + sirka, y, 20, 60)
 
-    class Rozcesti:     # TODO: dodělat otáčení
+    class Rozcesti:
         def __init__(self, x, y, strana):
             self.orientation = strana
 

@@ -109,10 +109,9 @@ def try_spawning_enemies(hra, big_enough_gap):
     return big_enough_gap
 
 
-def move_enemies(list_of_enemies):  # TODO: odstranit printy
+def move_enemies(list_of_enemies):
     for enemy in list_of_enemies:
         enemy.move()
-        print(f"X;Y {enemy.rect.x};{enemy.rect.y}")
 
 
 def game_updates(hra, log):
