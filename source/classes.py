@@ -102,13 +102,13 @@ class Hra:
 
             match self.otocen_na_stranu:
                 case "dolu":
-                    self.rect.y -= location_offset
+                    self.location[1] -= location_offset
                 case "nahoru":
-                    self.rect.y += location_offset
+                    self.location[1] += location_offset
                 case "doleva":
-                    self.rect.x += location_offset
+                    self.location[0] += location_offset
                 case "doprava":
-                    self.rect.x -= location_offset
+                    self.location[0] -= location_offset
 
             match self.typ_nepritele:   # TODO: problém u tanku s rychlostí
                 case "normal":
@@ -150,8 +150,7 @@ class Hra:
                         case "doprava":
                             if self.rect.x > spawner.rect.x:
                                 self.spawned = True
-
-        """
+        
         def move(self):     # Nový, nefunguje, jsou v sobě
             match self.otocen_na_stranu:
                 case "dolu":
@@ -165,22 +164,6 @@ class Hra:
 
             self.rect.x = int(self.location[0])
             self.rect.y = int(self.location[1])
-        """
-
-        def move(self):     # původní, funguje, krom tanků
-            match self.otocen_na_stranu:
-                case "dolu":
-                    self.location[1] += self.speed
-                    self.rect.y += self.speed
-                case "nahoru":
-                    self.location[1] -= self.speed
-                    self.rect.y -= self.speed
-                case "doprava":
-                    self.location[0] += self.speed
-                    self.rect.x += self.speed
-                case "doleva":
-                    self.location[0] -= self.speed
-                    self.rect.x -= self.speed
 
         def check_for_turn(self, path_list):
             for path in path_list:
