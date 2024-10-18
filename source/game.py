@@ -195,6 +195,10 @@ def draw_menu(window, hra, texts):
     window.blit(texts[4], (45 - texts[4].get_width() / 2, 45))
     window.blit(texts[5], (45 - texts[5].get_width() / 2, 80))
 
+    # obrázky věží
+    #window.blit(pygame.transform.scale(hra.vez_1_textura, 45), (0, 100))   <--- není obrázek
+    window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 200))
+
     # Velký text, není potřeba
     #window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
     #window.blit(texts[1], (100, 800 - texts[1].get_height()))

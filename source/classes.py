@@ -360,7 +360,6 @@ class Hra:
 
                 list_of_enemies.append(enemy)
                 location_offset += enemy.rect.width + 10
-                print(location_offset)
 
             # Generate special enemies
             for _ in range(max_special):
