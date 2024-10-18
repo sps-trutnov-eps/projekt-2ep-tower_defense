@@ -34,6 +34,7 @@ class Hra:
 
         self.vez_1_textura = None
         self.vez_2_textura = pygame.image.load("obrazky/vez1.png")
+        self.vez_3_textura = None
 
         match self.obtiznost:
             case 1:
