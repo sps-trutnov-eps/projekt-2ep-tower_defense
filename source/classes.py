@@ -12,6 +12,7 @@ class Hra:
         self.wave_count = 0
         self.celkova_kapacita_streliva = None
         self.mnozstvi_streliva = 200
+        self.penezenka = 150
 
         self.seznam_entit = []
         self.enemies_list = []
@@ -99,6 +100,7 @@ class Hra:
             # bude možné na ně střílet
             self.spawned = False
             location_offset += self.rect.width
+            self.odmena = 5
 
             match self.otocen_na_stranu:
                 case "dolu":
@@ -119,10 +121,12 @@ class Hra:
                     self.hp = 1
                     self.speed = 3
                     self.rect_color = (255, 255, 0)
+                    self.odmena = 7
                 case "tank":
                     self.hp = 10
                     self.speed = 1
                     self.rect_color = (0, 0, 0)
+                    self.odmena = 10
                 case _:
                     self.hp = 4
                     self.speed = 2
@@ -412,9 +416,7 @@ class Hra:
                     self.rect = pygame.Rect(x, y, 30, 130)
 
     class Vez:
-        # TODO: střílení,
-        #       spotřeba munice,
-        #       typy věží
+        # TODO: pokládání, cena
         def __init__(self, typ, location, hra_instance):
             self.type = typ
             self.location = location

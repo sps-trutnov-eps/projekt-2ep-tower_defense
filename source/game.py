@@ -128,6 +128,12 @@ def game_updates(hra, log):
         hra.update_wave_count()
         if hra.wave_count != 1:
             hra.mnozstvi_streliva += 15
+            if hra.wave_count < 10:
+                hra.penezenka += 100
+            elif hra.wave_count < 25:
+                hra.penezenka += 500
+            else:
+                hra.penezenka += 1000
 
         log.write_to_log(f"Vygenerováno: {count_entities('nepratele', hra.seznam_entit)}")
         log.write_to_log(f"Vlna {hra.wave_count} úspěšně vygenerována")
@@ -140,6 +146,7 @@ def game_updates(hra, log):
     for enemy in hra.seznam_entit["nepratele"]:
         kill_enemy = enemy.outofbounds_check(log)
         if kill_enemy or enemy.hp <= 0:
+            hra.penezenka += enemy.odmena
             hra.seznam_entit["nepratele"].remove(enemy)
             hra.enemies_killed += 1
         if not enemy.spawned:
@@ -229,7 +236,8 @@ def game_window_draw(window, hra, texts):
         pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
 
     window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
-    window.blit(texts[1], (5, 800 - texts[1].get_height()))
+    window.blit(texts[1], (100, 800 - texts[1].get_height()))
+    window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
 
     pygame.display.flip()
 
@@ -267,10 +275,11 @@ def game_main(mapa, obtiznost):
         text_vlna = wave_text.render(f'Vlna: {hra.wave_count}', False, WHITE)
         text_strelivo = wave_text.render(f'Střelivo: {hra.mnozstvi_streliva}/{hra.celkova_kapacita_streliva}',
                                          False, WHITE)
+        text_penize = wave_text.render(f'Peníze: {hra.penezenka}', False, WHITE)
 
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra, texts=[text_vlna, text_strelivo])
+        game_window_draw(game_window, hra, texts=[text_vlna, text_strelivo, text_penize])
 
         # dá čas hráči pro rozkoukání
         if not time:
@@ -286,7 +295,8 @@ def game_main(mapa, obtiznost):
     game_over_text = big_font.render("Konec Hry", False, BLACK)
 
     stats_font = pygame.font.SysFont(None, 60)
-    enemies_killed = stats_font.render(f'Enemies killed: {hra.enemies_killed}', False, BLACK)
+    enemies_killed = stats_font.render(f'Zabitých neprátel: {hra.enemies_killed}', False, BLACK)
+    money_left_over = stats_font.render(f'Vaše peníze: {hra.penezenka}', False, BLACK)
 
     exit_menu_running = True
     while exit_menu_running:
@@ -299,6 +309,7 @@ def game_main(mapa, obtiznost):
         game_window.blit(game_over_text, (game_window.get_width()/2 - game_over_text.get_width() / 2,
                                 game_window.get_height()/2 - 300))
         game_window.blit(enemies_killed, (game_window.get_width()/2 - enemies_killed.get_width() / 2, game_window.get_height()/2))
+        game_window.blit(money_left_over, (game_window.get_width()/2 - money_left_over.get_width() / 2, game_window.get_height() / 2 + 60))
         pygame.display.flip()
     log.write_to_log("Hra ukončena")
 
