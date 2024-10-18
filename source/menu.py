@@ -43,11 +43,11 @@ def menu_screen(window):
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if mapa1.collidepoint(event.pos):
-                    menu_mapa1(window)
+                    menu_mapa(window)
                 elif mapa2.collidepoint(event.pos):
-                    menu_mapa2(window)
+                    menu_mapa(window)
                 elif mapa3.collidepoint(event.pos):
-                    menu_mapa3(window)
+                    menu_mapa(window)
            
            
         window.fill(bila)
@@ -69,7 +69,7 @@ def menu_screen(window):
         
         
         
-def menu_mapa1(window):
+def menu_mapa(window):
     running = True
     while running:
         for event in pygame.event.get():
@@ -87,39 +87,7 @@ def menu_mapa1(window):
         pygame.display.flip()
         
         
-def menu_mapa2(window):
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                
-        
-        window.fill(bila)
-        
-        font = pygame.font.SysFont(None, 140)
-        text = font.render('OBTÍŽNOSTI', True, cerna)
-        text_rect = text.get_rect(center=(400, 100))
-        window.blit(text, text_rect)
-        
-        pygame.display.flip()
-        
-def menu_mapa3(window):
-    running = True
-    while running:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-                
-        
-        window.fill(bila)
-        
-        font = pygame.font.SysFont(None, 140)
-        text = font.render('OBTÍŽNOSTI', True, cerna)
-        text_rect = text.get_rect(center=(400, 100))
-        window.blit(text, text_rect)
-        
-        pygame.display.flip()
+
     
     
 if __name__ == "__main__":
