@@ -417,7 +417,7 @@ class Hra:
                     self.rect = pygame.Rect(x, y, 30, 130)
 
     class Vez:
-        # TODO: pokládání, cena
+        # TODO: pokládání
         def __init__(self, typ, location, hra_instance):
             self.type = typ
             self.location = location
@@ -426,6 +426,8 @@ class Hra:
             self.attack_cooldown = 0
             self.cooldown = 0
             self.radius = 0
+
+            self.placement_cost = 0
 
             self.testing_rect = pygame.Rect(location[0], location[1], 45, 45)
             self.blittable = None
@@ -438,29 +440,34 @@ class Hra:
                     self.damage = 5
                     self.attack_cooldown = 100  # v fpskách?
                     self.radius = 200
+                    self.placement_cost = 5
 
                 case "normal_tower":     # basic tower
                     self.damage = 5
                     self.attack_cooldown = 100
                     self.radius = 200
                     self.blittable = None
+                    self.placement_cost = 100
 
                 case "speedy_tower":     # fast, short range tower?
                     self.damage = 2
                     self.attack_cooldown = 50
                     self.radius = 70
                     self.blittable = hra_instance.vez_2_textura
+                    self.placement_cost = 125
 
                 case "sniper_tower":
                     self.damage = 15
                     self.attack_cooldown = 300
                     self.radius = 800
                     self.blittable = None
+                    self.placement_cost = 150
 
                 case _:     # v případě chyby
                     self.damage = 5
                     self.attack_cooldown = 100
                     self.radius = 200
+                    self.placement_cost = 100
 
         def placement_check(self, hra_instance, location: list):      # will require a check when used, whether it can be placed
             location_rectangle = pygame.Rect(location[0], location[1], 1, 1)

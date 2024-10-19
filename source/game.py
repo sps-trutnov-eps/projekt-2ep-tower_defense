@@ -1,4 +1,5 @@
 import pygame
+
 pygame.font.init()
 import random
 
@@ -122,7 +123,7 @@ def game_updates(hra, log):
         hra.aktualni_vlna_dokoncena = True
 
     if hra.aktualni_vlna_dokoncena:
-        log.write_to_log(f"Zjištěno že není aktivní žádná vlna, spouštím vlnu: {hra.wave_count+1}")
+        log.write_to_log(f"Zjištěno že není aktivní žádná vlna, spouštím vlnu: {hra.wave_count + 1}")
 
         for spawner in hra.seznam_entit["spawnery"]:
             spawner.make_wave(hra)
@@ -174,7 +175,7 @@ def game_updates(hra, log):
 
 def draw_menu(window, hra, texts):
     # rámeček
-    #pygame.draw.rect(window, WHITE, (90, 0, 2, 1200))
+    # pygame.draw.rect(window, WHITE, (90, 0, 2, 1200))
     window.blit(hra.side_menu_textura, (0, 0))
 
     # stats (vlna, střelivo, peníze)
@@ -183,23 +184,23 @@ def draw_menu(window, hra, texts):
     window.blit(texts[5], (45 - texts[5].get_width() / 2, 138))
 
     # obrázky věží
-    #window.blit(pygame.transform.scale(hra.vez_1_textura, 45), (0, 150))   <--- není obrázek
+    # window.blit(pygame.transform.scale(hra.vez_1_textura, 45), (0, 150))   <--- není obrázek
     pygame.draw.rect(window, BLUE, (0, 180, 90, 90))
 
     window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 275))
-    #window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 250))
+    # window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 250))
     pygame.draw.rect(window, GREEN, (0, 370, 90, 90))
 
     # Velký text, není potřeba
-    #window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
-    #window.blit(texts[1], (100, 800 - texts[1].get_height()))
-    #window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
+    # window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
+    # window.blit(texts[1], (100, 800 - texts[1].get_height()))
+    # window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
 
 
 def game_window_draw(window, hra, texts):
     window.fill(BLACK)
 
-    for cesta in hra.seznam_entit["cesty"]:                                 # in dev only
+    for cesta in hra.seznam_entit["cesty"]:  # in dev only
         pygame.draw.rect(window, WHITE, cesta.cesta)
 
     for cesta in hra.seznam_entit["skryte_cesty"]:  # in dev only
@@ -208,31 +209,31 @@ def game_window_draw(window, hra, texts):
     for rozcesti in hra.seznam_entit["rozcesti"]:
         pygame.draw.rect(window, WHITE, rozcesti.rect)
 
-    for vesnice in hra.seznam_entit["vesnice"]:                                 # in dev only
+    for vesnice in hra.seznam_entit["vesnice"]:  # in dev only
         pygame.draw.rect(window, vesnice.color, vesnice.rect)
 
-    for dul in hra.seznam_entit["doly"]:                                 # in dev only
+    for dul in hra.seznam_entit["doly"]:  # in dev only
         pygame.draw.rect(window, dul.color, dul.rect)
 
-    for vez in hra.seznam_entit["veze"]:                                 # in dev only
+    for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
             pass
-            #window.blit(vez.blittable, vez.location)
+            # window.blit(vez.blittable, vez.location)
         elif vez.type == "speedy_tower":
             window.blit(vez.blittable, vez.location)
         elif vez.type == "sniper_tower":
             pass
-            #window.blit(vez.blittable, vez.location)
+            # window.blit(vez.blittable, vez.location)
         elif vez.type == "test_tower":
             pygame.draw.rect(window, BLUE, vez.testing_rect)
         else:
             pygame.draw.rect(window, BLUE, vez.testing_rect)
 
-    for enemy in hra.seznam_entit["nepratele"]:                                 # in dev only
+    for enemy in hra.seznam_entit["nepratele"]:  # in dev only
         if enemy.spawned:
             if enemy.rect_color != RED:
                 pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
-            
+
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
                 window.blit(
@@ -240,7 +241,7 @@ def game_window_draw(window, hra, texts):
                     (enemy.rect.x, enemy.rect.y)
                 )
 
-    for spawner in hra.seznam_entit["spawnery"]:                                 # in dev only
+    for spawner in hra.seznam_entit["spawnery"]:  # in dev only
         pygame.draw.rect(window, RED, spawner.rect)
 
     for zakladna in hra.seznam_entit["zakladny"]:
@@ -294,15 +295,16 @@ def game_main(mapa, obtiznost):
 
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra, texts=[text_vlna, text_strelivo, text_penize, text_menu_wave_count, text_menu_penize, text_menu_strelivo])
+        game_window_draw(game_window, hra,
+                         texts=[text_vlna, text_strelivo, text_penize, text_menu_wave_count, text_menu_penize,
+                                text_menu_strelivo])
 
         # dá čas hráči pro rozkoukání
         if not time:
-            #pygame.time.wait(2500)
+            # pygame.time.wait(2500)
             time = True
 
         clock.tick(FPS)
-
 
     #                   Po skončení hry
     ####################################################
@@ -321,10 +323,12 @@ def game_main(mapa, obtiznost):
                 log.write_to_log("Tlačítko QUIT zmáčknuto")
         game_window.fill(RED)
 
-        game_window.blit(game_over_text, (game_window.get_width()/2 - game_over_text.get_width() / 2,
-                                game_window.get_height()/2 - 300))
-        game_window.blit(enemies_killed, (game_window.get_width()/2 - enemies_killed.get_width() / 2, game_window.get_height()/2))
-        game_window.blit(money_left_over, (game_window.get_width()/2 - money_left_over.get_width() / 2, game_window.get_height() / 2 + 60))
+        game_window.blit(game_over_text, (game_window.get_width() / 2 - game_over_text.get_width() / 2,
+                                          game_window.get_height() / 2 - 300))
+        game_window.blit(enemies_killed,
+                         (game_window.get_width() / 2 - enemies_killed.get_width() / 2, game_window.get_height() / 2))
+        game_window.blit(money_left_over, (
+        game_window.get_width() / 2 - money_left_over.get_width() / 2, game_window.get_height() / 2 + 60))
         pygame.display.flip()
     log.write_to_log("Hra ukončena")
 
