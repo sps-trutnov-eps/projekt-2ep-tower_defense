@@ -61,6 +61,13 @@ def load_seznam_entit(hra, log):
         case _:
             pass
 
+    tower1button = hra.Tlacitko(hra, 0, 180, "normal_tower")
+    tower2button = hra.Tlacitko(hra, 0, 275, "speedy_tower")
+    tower3button = hra.Tlacitko(hra, 0, 370, "sniper_tower")
+    hra.list_of_buttons.append(tower1button)
+    hra.list_of_buttons.append(tower2button)
+    hra.list_of_buttons.append(tower3button)
+
     return seznam_entit
 
 
@@ -280,6 +287,11 @@ def game_main(mapa, obtiznost):
             if event.type == pygame.QUIT:
                 game_running = False
                 log.write_to_log("Tlačítko QUIT zmáčknuto")
+
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                for button in hra.list_of_buttons:
+                    if button.rect.collidepoint(pygame.mouse.get_pos()):
+                        current_action = button.action
 
         if hra.game_over:
             game_running = False

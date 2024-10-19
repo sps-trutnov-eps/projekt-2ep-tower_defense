@@ -13,10 +13,11 @@ class Hra:
         self.celkova_kapacita_streliva = None
         self.mnozstvi_streliva = 200
         self.penezenka = 150
+        self.list_of_buttons = []
 
         self.seznam_entit = []
         self.enemies_list = []
-        self.enemies_to_spawn_count = [0, 0, 0]      # normal enemy | fast enemy | tank
+        self.enemies_to_spawn_count = [0, 0, 0]  # normal enemy | fast enemy | tank
         self.enemies_killed = 0
 
         self.seznam_cest = []
@@ -96,7 +97,7 @@ class Hra:
             self.typ_nepritele = typ_nepritele
             self.location = [spawner_location[0] + 20, spawner_location[1] + 20]
             self.otocen_na_stranu = spawner_side
-            self.rect = pygame.Rect(self.location[0] - (21/2), self.location[1] - (21/2), 27, 27)
+            self.rect = pygame.Rect(self.location[0] - (21 / 2), self.location[1] - (21 / 2), 27, 27)
 
             # spawn hodnoty
             # při spawnu se budou spawnovat pozadu, podle typu, a až poté, co projdou spawnerem se budou vykreslovat a
@@ -157,8 +158,8 @@ class Hra:
                         case "doprava":
                             if self.rect.x > spawner.rect.x:
                                 self.spawned = True
-        
-        def move(self):     # Nový, nefunguje, jsou v sobě
+
+        def move(self):  # Nový, nefunguje, jsou v sobě
             match self.otocen_na_stranu:
                 case "dolu":
                     self.location[1] += self.speed
@@ -318,7 +319,7 @@ class Hra:
         def __init__(self, hra_instance, location, rotace_spawneru):
 
             self.location = location
-            self.rotace_spawneru = rotace_spawneru      # strany jako do leva, do prava, dolu, nahoru
+            self.rotace_spawneru = rotace_spawneru  # strany jako do leva, do prava, dolu, nahoru
 
             self.obtiznost = hra_instance.obtiznost
             self.obtiznost_multiplier = self.obtiznost * 0.5
@@ -442,14 +443,14 @@ class Hra:
                     self.radius = 200
                     self.placement_cost = 5
 
-                case "normal_tower":     # basic tower
+                case "normal_tower":  # basic tower
                     self.damage = 5
                     self.attack_cooldown = 100
                     self.radius = 200
                     self.blittable = None
                     self.placement_cost = 100
 
-                case "speedy_tower":     # fast, short range tower?
+                case "speedy_tower":  # fast, short range tower?
                     self.damage = 2
                     self.attack_cooldown = 50
                     self.radius = 70
@@ -463,13 +464,14 @@ class Hra:
                     self.blittable = None
                     self.placement_cost = 150
 
-                case _:     # v případě chyby
+                case _:  # v případě chyby
                     self.damage = 5
                     self.attack_cooldown = 100
                     self.radius = 200
                     self.placement_cost = 100
 
-        def placement_check(self, hra_instance, location: list):      # will require a check when used, whether it can be placed
+        def placement_check(self, hra_instance,
+                            location: list):  # will require a check when used, whether it can be placed
             location_rectangle = pygame.Rect(location[0], location[1], 1, 1)
             collides = False
 
@@ -489,7 +491,7 @@ class Hra:
 
                         hra_instance.mnozstvi_streliva -= 1
 
-        def shooting(self):     # vzhledově
+        def shooting(self):  # vzhledově
             pass
 
         def find_closest_enemy(self, seznam_nepratel):
@@ -497,12 +499,13 @@ class Hra:
                 return None
 
             closest = seznam_nepratel[0]
-            closest_dist = math.isqrt(abs(seznam_nepratel[0].rect.centerx - self.testing_rect.centerx)**2 + abs(seznam_nepratel[0].rect.centery - self.testing_rect.centery)**2)
+            closest_dist = math.isqrt(abs(seznam_nepratel[0].rect.centerx - self.testing_rect.centerx) ** 2 + abs(
+                seznam_nepratel[0].rect.centery - self.testing_rect.centery) ** 2)
             for enemy in seznam_nepratel:
                 x = abs(enemy.rect.centerx - self.testing_rect.centerx)
                 y = abs(enemy.rect.centery - self.testing_rect.centery)
 
-                distance = math.isqrt(x**2 + y**2)
+                distance = math.isqrt(x ** 2 + y ** 2)
                 if closest_dist > distance:
                     closest_dist = distance
                     closest = enemy
@@ -511,7 +514,7 @@ class Hra:
             else:
                 return None
 
-    class Doly:     # těžba suroviny, která by byla transportována do základny pro munici
+    class Doly:  # těžba suroviny, která by byla transportována do základny pro munici
         def __init__(self, hra_instance, location: list):
             self.location = location
             self.ownership = True
@@ -519,16 +522,22 @@ class Hra:
             self.color = (30, 30, 30)
 
     class Vesnice:
-        def __init__(self, hra_instance, location: list):     # usedliště civilistů, kteří by transportovali suroviny do základen
+        def __init__(self, hra_instance,
+                     location: list):  # usedliště civilistů, kteří by transportovali suroviny do základen
             self.location = location
             self.ownership = True
             self.rect = pygame.Rect(location[0], location[1], 50, 50)
-            self.color = (255, 255, 0)      # pro případy, kdy není žádná textura
+            self.color = (255, 255, 0)  # pro případy, kdy není žádná textura
 
         def check_closest_path_point(self, hra_instance):
             check = False
             if check:
                 self.ownership = False
+
+    class Tlacitko:
+        def __init__(self, hra_instance, x, y, action):
+            self.rect = pygame.Rect(x, y, 90, 90)
+            self.action = action
 
     class Logging:
         def __init__(self):
