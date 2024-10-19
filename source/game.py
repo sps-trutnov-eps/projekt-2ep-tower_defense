@@ -2,8 +2,8 @@ import pygame
 pygame.font.init()
 import random
 
-wave_text = pygame.font.SysFont(None, 50)
-menu_text = pygame.font.SysFont(None, 30)
+wave_text = pygame.font.SysFont("Arial", 25)
+menu_text = pygame.font.SysFont("Arial", 25)
 
 # barvičky
 BLACK = (0, 0, 0)
@@ -161,20 +161,6 @@ def game_updates(hra, log):
 
         for zakladna in hra.seznam_entit["zakladny"]:
             if enemy.rect.colliderect(zakladna.rect):
-                """
-                if zakladna.fallen and not enemy.reverse_direction:
-                    enemy.reverse_direction = True
-
-                    match enemy.otocen_na_stranu:
-                        case "nahoru":
-                            enemy.otocen_na_stranu = "dolu"
-                        case "dolu":
-                            enemy.otocen_na_stranu = "nahoru"
-                        case "doleva":
-                            enemy.otocen_na_stranu = "doprava"
-                        case "doprava":
-                            enemy.otocen_na_stranu = "doleva"
-                """
                 if not zakladna.fallen:
                     enemy.utok_na_zakladnu(hra, hra.seznam_entit["zakladny"].index(zakladna), log)
 
@@ -188,20 +174,21 @@ def game_updates(hra, log):
 
 def draw_menu(window, hra, texts):
     # rámeček
-    pygame.draw.rect(window, (WHITE), (90, 0, 2, 1200))
+    #pygame.draw.rect(window, WHITE, (90, 0, 2, 1200))
+    window.blit(hra.side_menu_textura, (0, 0))
 
-    # stats (náboje, peníze, životy??)
-    window.blit(texts[3], (45 - texts[3].get_width() / 2, 10))
-    window.blit(texts[4], (45 - texts[4].get_width() / 2, 45))
-    window.blit(texts[5], (45 - texts[5].get_width() / 2, 80))
+    # stats (vlna, střelivo, peníze)
+    window.blit(texts[3], (45 - texts[3].get_width() / 2, 30))
+    window.blit(texts[4], (45 - texts[4].get_width() / 2, 58 + 26))
+    window.blit(texts[5], (45 - texts[5].get_width() / 2, 138))
 
     # obrázky věží
     #window.blit(pygame.transform.scale(hra.vez_1_textura, 45), (0, 150))   <--- není obrázek
-    pygame.draw.rect(window, BLUE, (0, 150, 90, 90))
+    pygame.draw.rect(window, BLUE, (0, 180, 90, 90))
 
-    window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 245))
+    window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 275))
     #window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 250))
-    pygame.draw.rect(window, GREEN, (0, 340, 90, 90))
+    pygame.draw.rect(window, GREEN, (0, 370, 90, 90))
 
     # Velký text, není potřeba
     #window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
@@ -301,9 +288,9 @@ def game_main(mapa, obtiznost):
                                          False, WHITE)
         text_penize = wave_text.render(f'Peníze: {hra.penezenka}', False, WHITE)
 
-        text_menu_wave_count = menu_text.render(f"{hra.wave_count}", False, WHITE)
-        text_menu_strelivo = menu_text.render(f"{hra.mnozstvi_streliva}/{hra.celkova_kapacita_streliva}", False, WHITE)
-        text_menu_penize = menu_text.render(f"{hra.penezenka}", False, WHITE)
+        text_menu_wave_count = menu_text.render(f"{hra.wave_count}", False, BLACK)
+        text_menu_strelivo = menu_text.render(f"{hra.mnozstvi_streliva}/{hra.celkova_kapacita_streliva}", False, BLACK)
+        text_menu_penize = menu_text.render(f"{hra.penezenka}", False, BLACK)
 
         game_updates(hra, log)
 

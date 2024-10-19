@@ -36,6 +36,8 @@ class Hra:
         self.vez_2_textura = pygame.image.load("obrazky/vez1.png")
         self.vez_3_textura = None
 
+        self.side_menu_textura = pygame.image.load("obrazky/postranni_menu.png")
+
         match self.obtiznost:
             case 1:
                 self.base_enemy_number = 10
@@ -92,7 +94,7 @@ class Hra:
             """
 
             self.typ_nepritele = typ_nepritele
-            self.location = [spawner_location[0] + 30, spawner_location[1] + 30]
+            self.location = [spawner_location[0] + 20, spawner_location[1] + 20]
             self.otocen_na_stranu = spawner_side
             self.rect = pygame.Rect(self.location[0] - (21/2), self.location[1] - (21/2), 27, 27)
 
