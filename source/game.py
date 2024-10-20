@@ -129,6 +129,14 @@ def game_updates(hra, log):
     if not hra.seznam_entit["nepratele"] and not hra.aktualni_vlna_dokoncena:
         hra.aktualni_vlna_dokoncena = True
 
+        value = 0
+        for vesnice in hra.seznam_entit["vesnice"]:
+            if not vesnice.fallen:
+                value += vesnice.value
+        hra.mnozstvi_streliva += value
+        if hra.mnozstvi_streliva > hra.celkova_kapacita_streliva:
+            hra.mnozstvi_streliva = hra.celkova_kapacita_streliva
+
     if hra.aktualni_vlna_dokoncena:
         log.write_to_log(f"Zjištěno že není aktivní žádná vlna, spouštím vlnu: {hra.wave_count + 1}")
 
@@ -175,6 +183,11 @@ def game_updates(hra, log):
                     if zakladna.fallen:
                         hra.get_max_resource_count()
 
+        for vesnice in hra.seznam_entit["vesnice"]:
+            if enemy.rect.colliderect(vesnice.rect):
+                if not vesnice.fallen:
+                    enemy.utok_na_vesnici(hra, hra.seznam_entit["vesnice"].index(vesnice), log)
+
     for vez in hra.seznam_entit["veze"]:
         vez.shoot(hra.seznam_entit["nepratele"], hra)
         vez.cooldown -= 1
@@ -216,12 +229,6 @@ def game_window_draw(window, hra, texts):
     for rozcesti in hra.seznam_entit["rozcesti"]:
         pygame.draw.rect(window, WHITE, rozcesti.rect)
 
-    for vesnice in hra.seznam_entit["vesnice"]:  # in dev only
-        pygame.draw.rect(window, vesnice.color, vesnice.rect)
-
-    for dul in hra.seznam_entit["doly"]:  # in dev only
-        pygame.draw.rect(window, dul.color, dul.rect)
-
     for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
             pass
@@ -247,6 +254,9 @@ def game_window_draw(window, hra, texts):
                     pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
                     (enemy.rect.x, enemy.rect.y)
                 )
+
+    for vesnice in hra.seznam_entit["vesnice"]:  # in dev only
+        pygame.draw.rect(window, vesnice.color, vesnice.rect)
 
     for spawner in hra.seznam_entit["spawnery"]:  # in dev only
         pygame.draw.rect(window, RED, spawner.rect)

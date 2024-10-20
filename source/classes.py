@@ -3,6 +3,7 @@ import pygame
 import math
 
 
+# noinspection PyTypeChecker
 class Hra:
     def __init__(self, mapa, obtiznost):
         self.mapa = mapa
@@ -140,6 +141,10 @@ class Hra:
 
         def utok_na_zakladnu(self, hra_instance, zakladna_int, log):
             hra_instance.seznam_entit["zakladny"][zakladna_int].enemy_attack(self, log)
+            hra_instance.seznam_entit["nepratele"].remove(self)
+
+        def utok_na_vesnici(self, hra_instance, vesnice_int, log):
+            hra_instance.seznam_entit["vesnice"][vesnice_int].enemy_attack(self, log)
             hra_instance.seznam_entit["nepratele"].remove(self)
 
         def check_to_spawn(self, spawners):
@@ -393,7 +398,7 @@ class Hra:
             return hra_instance
 
     class Cesta:
-        def __init__(self, hra_instance, x, y, sirka, vyska, otocit_se_na):
+        def __init__(self, x, y, sirka, vyska, otocit_se_na):
             self.cesta = pygame.Rect(x, y, sirka, vyska)
             self.turn_to = otocit_se_na
 
@@ -514,25 +519,30 @@ class Hra:
             else:
                 return None
 
-    class Doly:  # těžba suroviny, která by byla transportována do základny pro munici
-        def __init__(self, hra_instance, location: list):
-            self.location = location
-            self.ownership = True
-            self.rect = pygame.Rect(location[0], location[1], 50, 50)
-            self.color = (30, 30, 30)
-
     class Vesnice:
         def __init__(self, hra_instance,
-                     location: list):  # usedliště civilistů, kteří by transportovali suroviny do základen
+                     location: list, value):  # usedliště civilistů, kteří produkují munici
             self.location = location
             self.ownership = True
             self.rect = pygame.Rect(location[0], location[1], 50, 50)
             self.color = (255, 255, 0)  # pro případy, kdy není žádná textura
+            self.value = value  # Hodnota dolu, tato hodnota bude přičtena na konci každého kola k nábojům
+            self.fallen = False
+            self.hp = 40
 
-        def check_closest_path_point(self, hra_instance):
-            check = False
-            if check:
-                self.ownership = False
+            match hra_instance.obtiznost:
+                case 1:
+                    self.hp = 40
+                case 2:
+                    self.hp = 35
+                case 3:
+                    self.hp = 25
+
+        def enemy_attack(self, enemy, log):
+            self.hp -= enemy.hp
+            if self.hp <= 0:
+                self.fallen = True
+                log.write_to_log("Vesnice padla!")
 
     class Tlacitko:
         def __init__(self, hra_instance, x, y, action):
