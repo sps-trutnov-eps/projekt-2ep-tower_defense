@@ -1,7 +1,7 @@
 import pygame
+import random
 
 pygame.font.init()
-import random
 
 wave_text = pygame.font.SysFont("Arial", 25)
 menu_text = pygame.font.SysFont("Arial", 25)
@@ -13,6 +13,7 @@ GRAY = (30, 30, 30)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+RED_TRANSLUCENT = (255, 0, 0, 128)
 
 FPS = 60
 
@@ -103,6 +104,18 @@ def mapa_translation(mapa):
             translation = "How did we get here?"
 
     return translation
+
+
+def get_circle_radius(hra, current_action):
+    match current_action:
+        case "normal_tower":
+            return 65
+        case "speedy_tower":
+            return 50
+        case "sniper_tower":
+            return 95
+        case _:
+            return 75
 
 
 def try_spawning_enemies(hra, big_enough_gap):
@@ -217,8 +230,12 @@ def draw_menu(window, hra, texts):
     # window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
 
 
-def game_window_draw(window, hra, texts):
+def game_window_draw(window, hra, texts, circle_surface, circle_radius):
     window.fill(BLACK)
+
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+    circle_surface.fill((0, 0, 0, 0))
+    pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (400, 400), circle_radius)
 
     for cesta in hra.seznam_entit["cesty"]:  # in dev only
         pygame.draw.rect(window, WHITE, cesta.cesta)
@@ -264,6 +281,8 @@ def game_window_draw(window, hra, texts):
     for zakladna in hra.seznam_entit["zakladny"]:
         pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
 
+    window.blit(circle_surface, (mouse_x - 400, mouse_y - 400))
+
     draw_menu(window, hra, texts)
 
     pygame.display.flip()
@@ -271,6 +290,8 @@ def game_window_draw(window, hra, texts):
 
 def game_main(mapa, obtiznost):
     from classes import Hra
+
+    circle_surface = pygame.Surface((800, 800), pygame.SRCALPHA)
 
     time = False
     clock = pygame.time.Clock()
@@ -303,6 +324,8 @@ def game_main(mapa, obtiznost):
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         current_action = button.action
 
+        circle_radius = get_circle_radius(hra, current_action)
+
         if hra.game_over:
             game_running = False
 
@@ -317,9 +340,8 @@ def game_main(mapa, obtiznost):
 
         game_updates(hra, log)
 
-        game_window_draw(game_window, hra,
-                         texts=[text_vlna, text_strelivo, text_penize, text_menu_wave_count, text_menu_penize,
-                                text_menu_strelivo])
+        game_window_draw(game_window, hra, [text_vlna, text_strelivo, text_penize, text_menu_wave_count,
+                                            text_menu_penize, text_menu_strelivo], circle_surface, circle_radius)
 
         # dá čas hráči pro rozkoukání
         if not time:
