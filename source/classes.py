@@ -440,6 +440,8 @@ class Hra:
 
             self.define_rest_of_stats(hra_instance)
 
+            self.space_taken = pygame.Rect(location[0], location[1], self.radius, self.radius)  # TODO: přesné umístění
+
         def define_rest_of_stats(self, hra_instance):
             match self.type:
                 case "test_tower":

@@ -13,7 +13,7 @@ GRAY = (30, 30, 30)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
-RED_TRANSLUCENT = (255, 0, 0, 128)
+RED_TRANSLUCENT = (255, 0, 0, 50)      # původně 255,0,0,128
 
 FPS = 60
 
@@ -116,6 +116,21 @@ def get_circle_radius(hra, current_action):
             return 95
         case _:
             return 75
+
+
+def test_for_collisions(nova_vez, hra):
+    for vez in hra.seznam_entit["veze"]:
+        if nova_vez.testing_rect.colliderect(vez.space_taken):
+            return True
+    for cesta in hra.seznam_entit["cesty"]:
+        if nova_vez.testing_rect.colliderect(cesta.rect_border):
+            return True
+    for spawner in hra.seznam_entit["spawnery"]:
+        if nova_vez.testing_rect.colliderect(spawner.rect):
+            return True
+    for zakladna in hra.seznam_entit["zakladny"]:
+        if nova_vez.testing_rect.colliderect(zakladna.rect):
+            return True
 
 
 def try_spawning_enemies(hra, big_enough_gap):
@@ -292,6 +307,7 @@ def game_main(mapa, obtiznost):
     from classes import Hra
 
     circle_surface = pygame.Surface((800, 800), pygame.SRCALPHA)
+    circle_radius = 0
 
     time = False
     clock = pygame.time.Clock()
@@ -320,11 +336,20 @@ def game_main(mapa, obtiznost):
                 log.write_to_log("Tlačítko QUIT zmáčknuto")
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                action_changed = False
                 for button in hra.list_of_buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         current_action = button.action
+                        action_changed = True
+                if not action_changed and current_action:
+                    x, y = pygame.mouse.get_pos()
+                    nova_vez = hra.Vez(current_action, (x - 22, y - 22), hra)
+                    if not test_for_collisions(nova_vez, hra) and hra.penezenka > nova_vez.placement_cost:
+                        hra.seznam_entit["veze"].append(nova_vez)
+                        hra.penezenka -= nova_vez.placement_cost
 
-        circle_radius = get_circle_radius(hra, current_action)
+        if current_action:
+            circle_radius = get_circle_radius(hra, current_action)
 
         if hra.game_over:
             game_running = False
