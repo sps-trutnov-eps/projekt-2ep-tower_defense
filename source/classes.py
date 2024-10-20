@@ -436,11 +436,12 @@ class Hra:
             self.placement_cost = 0
 
             self.testing_rect = pygame.Rect(location[0], location[1], 45, 45)
+            self.center = self.testing_rect.center
             self.blittable = None
 
             self.define_rest_of_stats(hra_instance)
-
-            self.space_taken = pygame.Rect(location[0], location[1], self.radius, self.radius)  # TODO: přesné umístění
+            self.space_taken = pygame.Rect(self.center[0], self.center[1], self.radius, self.radius)
+            self.space_taken.center = self.center
 
         def define_rest_of_stats(self, hra_instance):
             match self.type:
@@ -476,17 +477,6 @@ class Hra:
                     self.attack_cooldown = 100
                     self.radius = 200
                     self.placement_cost = 100
-
-        def placement_check(self, hra_instance,
-                            location: list):  # will require a check when used, whether it can be placed
-            location_rectangle = pygame.Rect(location[0], location[1], 1, 1)
-            collides = False
-
-            for cesta in hra_instance.seznam_cest:
-                if location_rectangle.collidepoint(cesta):
-                    collides = True
-
-            return collides
 
         def shoot(self, seznam_nepratel, hra_instance):
             if self.cooldown < 1:
