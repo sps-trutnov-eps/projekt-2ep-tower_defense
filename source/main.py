@@ -12,7 +12,3 @@ if __name__ == "__main__":
 #       hra,
 #       mapy,
 #       ...
-
-# Na čem se dohodnout
-# TODO: jaké hodnoty? (životy, apod.)
-#       jaké mechaniky? (vesnice, doly, ...)

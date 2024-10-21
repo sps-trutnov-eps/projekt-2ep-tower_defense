@@ -314,6 +314,7 @@ def game_main(mapa, obtiznost):
 
     game_window = pygame.display.set_mode((1200, 800))
     pygame.display.set_caption(f"Tower Defense - {mapa_translation(mapa)}")
+    pygame.display.set_icon(pygame.image.load("obrazky/nepritel_normal.png"))
     game_running = True
 
     current_action = None
