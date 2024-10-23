@@ -14,6 +14,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 RED_TRANSLUCENT = (255, 0, 0, 50)      # původně 255,0,0,128
+GREEN_TRANSLUCENT = (0, 255, 0, 50)
 
 FPS = 60
 
@@ -109,11 +110,23 @@ def mapa_translation(mapa):
 def get_circle_radius(hra, current_action):
     match current_action:
         case "normal_tower":
-            return 65
+            return 65/2
         case "speedy_tower":
-            return 50
+            return 65/2
         case "sniper_tower":
-            return 95
+            return 100/2
+        case _:
+            return 75
+
+
+def get_circle_range_radius(hra, current_action):
+    match current_action:
+        case "normal_tower":
+            return 150
+        case "speedy_tower":
+            return 70
+        case "sniper_tower":
+            return 1200
         case _:
             return 75
 
@@ -220,6 +233,9 @@ def game_updates(hra, log):
         vez.shoot(hra.seznam_entit["nepratele"], hra)
         vez.cooldown -= 1
 
+    if hra.mnozstvi_streliva > hra.celkova_kapacita_streliva:
+        hra.mnozstvi_streliva = hra.celkova_kapacita_streliva
+
 
 def draw_menu(window, hra, texts):
     # rámeček
@@ -245,11 +261,12 @@ def draw_menu(window, hra, texts):
     # window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
 
 
-def game_window_draw(window, hra, texts, circle_surface, circle_radius):
+def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_radius_range):
     window.fill(BLACK)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     circle_surface.fill((0, 0, 0, 0))
+    pygame.draw.circle(circle_surface, GREEN_TRANSLUCENT, (400, 400), circle_radius_range)
     pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (400, 400), circle_radius)
 
     for cesta in hra.seznam_entit["cesty"]:  # in dev only
@@ -263,12 +280,12 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius):
 
     for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
-            pass
+            pygame.draw.rect(window, BLUE, vez.testing_rect)
             # window.blit(vez.blittable, vez.location)
         elif vez.type == "speedy_tower":
             window.blit(vez.blittable, vez.location)
         elif vez.type == "sniper_tower":
-            pass
+            pygame.draw.rect(window, GREEN, vez.testing_rect)
             # window.blit(vez.blittable, vez.location)
         elif vez.type == "test_tower":
             pygame.draw.rect(window, BLUE, vez.testing_rect)
@@ -286,6 +303,12 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius):
                     pygame.transform.rotate(hra.nepritel_normal_textura, stupne),
                     (enemy.rect.x, enemy.rect.y)
                 )
+            if enemy.typ_nepritele == "tank":
+                stupne = preklad_na_stupne(enemy)
+                window.blit(
+                    pygame.transform.rotate(hra.nepritel_tank_textura, stupne),
+                    (enemy.rect.x, enemy.rect.y)
+                )
 
     for vesnice in hra.seznam_entit["vesnice"]:  # in dev only
         pygame.draw.rect(window, vesnice.color, vesnice.rect)
@@ -294,7 +317,8 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius):
         pygame.draw.rect(window, RED, spawner.rect)
 
     for zakladna in hra.seznam_entit["zakladny"]:
-        pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
+        #pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
+        window.blit(hra.spawner_textura, (zakladna.rect.x, zakladna.rect.y))
 
     window.blit(circle_surface, (mouse_x - 400, mouse_y - 400))
 
@@ -308,8 +332,8 @@ def game_main(mapa, obtiznost):
 
     circle_surface = pygame.Surface((800, 800), pygame.SRCALPHA)
     circle_radius = 0
+    circle_radius_range = 0
 
-    time = False
     clock = pygame.time.Clock()
 
     game_window = pygame.display.set_mode((1200, 800))
@@ -330,7 +354,11 @@ def game_main(mapa, obtiznost):
 
     log.write_to_log("Entity načteny")
 
+    import time
+    game_loaded_time = time.time()
+
     while game_running:
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_running = False
@@ -345,12 +373,17 @@ def game_main(mapa, obtiznost):
                 if not action_changed and current_action:
                     x, y = pygame.mouse.get_pos()
                     nova_vez = hra.Vez(current_action, (x - 22, y - 22), hra)
-                    if not test_for_collisions(nova_vez, hra) and hra.penezenka > nova_vez.placement_cost:
+                    if not test_for_collisions(nova_vez, hra) and hra.penezenka >= nova_vez.placement_cost:
                         hra.seznam_entit["veze"].append(nova_vez)
                         hra.penezenka -= nova_vez.placement_cost
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
+                current_action = None
+                circle_radius = 0
+                circle_radius_range = 0
 
         if current_action:
             circle_radius = get_circle_radius(hra, current_action)
+            circle_radius_range = get_circle_range_radius(hra, current_action)
 
         if hra.game_over:
             game_running = False
@@ -364,15 +397,12 @@ def game_main(mapa, obtiznost):
         text_menu_strelivo = menu_text.render(f"{hra.mnozstvi_streliva}/{hra.celkova_kapacita_streliva}", False, BLACK)
         text_menu_penize = menu_text.render(f"{hra.penezenka}", False, BLACK)
 
-        game_updates(hra, log)
+        if time.time() - game_loaded_time > 10:
+            game_updates(hra, log)
 
         game_window_draw(game_window, hra, [text_vlna, text_strelivo, text_penize, text_menu_wave_count,
-                                            text_menu_penize, text_menu_strelivo], circle_surface, circle_radius)
-
-        # dá čas hráči pro rozkoukání
-        if not time:
-            # pygame.time.wait(2500)
-            time = True
+                                            text_menu_penize, text_menu_strelivo], circle_surface, circle_radius,
+                         circle_radius_range)
 
         clock.tick(FPS)
 

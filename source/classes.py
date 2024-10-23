@@ -27,11 +27,10 @@ class Hra:
         # textury       TODO: přidat více textur
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png")
         self.nepritel_fast_textura = None
-        self.nepritel_tank_textura = None
+        self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/vez2.png"), (45, 45))
 
         self.background_textura = None
-        self.spawner_textura = None
-        self.dul_textura = None
+        self.spawner_textura = pygame.transform.scale(pygame.image.load("obrazky/base1.png"), (50, 50))
         self.vesnice_textura = None
 
         self.vez_1_textura = None
@@ -119,16 +118,16 @@ class Hra:
 
             match self.typ_nepritele:
                 case "normal":
-                    self.hp = 4
+                    self.hp = 5
                     self.speed = 2
                     self.rect_color = (255, 0, 0)
                 case "fast":
-                    self.hp = 1
+                    self.hp = 2
                     self.speed = 3
                     self.rect_color = (255, 255, 0)
                     self.odmena = 7
                 case "tank":
-                    self.hp = 10
+                    self.hp = 25
                     self.speed = 1
                     self.rect_color = (0, 0, 0)
                     self.odmena = 10
@@ -381,7 +380,6 @@ class Hra:
 
                 list_of_enemies.append(special_enemy)
                 location_offset += special_enemy.rect.width + 10
-                print(location_offset)
 
             return list_of_enemies
 
@@ -434,43 +432,39 @@ class Hra:
             self.radius = 0
 
             self.placement_cost = 0
+            self.placement_radius = 65
 
             self.testing_rect = pygame.Rect(location[0], location[1], 45, 45)
             self.center = self.testing_rect.center
             self.blittable = None
 
             self.define_rest_of_stats(hra_instance)
-            self.space_taken = pygame.Rect(self.center[0], self.center[1], self.radius, self.radius)
+            self.space_taken = pygame.Rect(self.center[0], self.center[1], self.placement_radius, self.placement_radius)
             self.space_taken.center = self.center
 
         def define_rest_of_stats(self, hra_instance):
             match self.type:
-                case "test_tower":
-                    self.damage = 5
-                    self.attack_cooldown = 100  # v fpskách?
-                    self.radius = 200
-                    self.placement_cost = 5
-
                 case "normal_tower":  # basic tower
                     self.damage = 5
-                    self.attack_cooldown = 100
-                    self.radius = 200
+                    self.attack_cooldown = 75
+                    self.radius = 150
                     self.blittable = None
                     self.placement_cost = 100
 
                 case "speedy_tower":  # fast, short range tower?
                     self.damage = 2
-                    self.attack_cooldown = 50
+                    self.attack_cooldown = 25
                     self.radius = 70
                     self.blittable = hra_instance.vez_2_textura
-                    self.placement_cost = 125
+                    self.placement_cost = 145
 
                 case "sniper_tower":
                     self.damage = 15
                     self.attack_cooldown = 300
-                    self.radius = 800
+                    self.radius = 1200
                     self.blittable = None
-                    self.placement_cost = 150
+                    self.placement_cost = 175
+                    self.placement_radius = 100
 
                 case _:  # v případě chyby
                     self.damage = 5
@@ -481,7 +475,7 @@ class Hra:
         def shoot(self, seznam_nepratel, hra_instance):
             if self.cooldown < 1:
                 closest_enemy = self.find_closest_enemy(seznam_nepratel)
-                if closest_enemy is not None:
+                if closest_enemy is not None and closest_enemy.spawned:
                     if hra_instance.mnozstvi_streliva > 0:
                         closest_enemy.hp -= self.damage
                         self.cooldown = self.attack_cooldown
