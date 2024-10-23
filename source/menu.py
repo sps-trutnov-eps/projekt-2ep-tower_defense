@@ -84,6 +84,13 @@ def menu_mapa(window):
         text_rect = text.get_rect(center=(400, 100))
         window.blit(text, text_rect)
         
+        obtiznost1 = pygame.Rect(108, 200, 180, 180)
+        pygame.draw.rect(window, cerna, obtiznost1)
+        obtiznost2 = pygame.Rect(308, 200, 180, 180)
+        pygame.draw.rect(window, cerna, obtiznost2)
+        obtiznost3 = pygame.Rect(508, 200, 180, 180)
+        pygame.draw.rect(window, cerna, obtiznost3)
+        
         pygame.display.flip()
         
         
