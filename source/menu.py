@@ -14,7 +14,7 @@ def menu_main():
                 menu_open = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if button_rect.collidepoint(event.pos):
-                    menu_screen(menu_window)
+                    menu_mapy(menu_window)
 
         menu_draw(menu_window)
         
@@ -35,7 +35,7 @@ def menu_draw(window):
     
     pygame.display.flip()
     
-def menu_screen(window):
+def menu_mapy(window):
     running = True
     while running:
         for event in pygame.event.get():
@@ -43,11 +43,14 @@ def menu_screen(window):
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if mapa1.collidepoint(event.pos):
-                    menu_mapa(window)
+                    menu_obtiznosti(window)
+                    mapa = mapa1
                 elif mapa2.collidepoint(event.pos):
-                    menu_mapa(window)
+                    menu_obtiznosti(window)
+                    mapa = mapa2
                 elif mapa3.collidepoint(event.pos):
-                    menu_mapa(window)
+                    menu_obtiznosti(window)
+                    mapa = mapa3
            
            
         window.fill(bila)
@@ -69,13 +72,19 @@ def menu_screen(window):
         
         
         
-def menu_mapa(window):
+def menu_obtiznosti(window):
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-                
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if obtiznost1.collidepoint(event.pos):
+                    obtiznost = obtiznost1
+                elif obtiznost2.collidepoint(event.pos):
+                    obtiznost = obtiznost2
+                elif obtiznost3.collidepoint(event.pos):
+                    obtiznost = obtiznost3
         
         window.fill(bila)
         
