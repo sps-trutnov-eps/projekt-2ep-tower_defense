@@ -25,19 +25,20 @@ class Hra:
         self.aktualni_vlna_dokoncena = True
 
         # textury       TODO: přidat více textur
-        self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png")
+        self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert()
         self.nepritel_fast_textura = None
-        self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/vez2.png"), (45, 45))
+        self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/vez2.png"), (45, 45)).convert()
 
         self.background_textura = None
-        self.spawner_textura = pygame.transform.scale(pygame.image.load("obrazky/base1.png"), (50, 50))
+        self.spawner_textura = pygame.transform.scale(pygame.image.load("obrazky/base1.png"), (50, 50)).convert()
         self.vesnice_textura = None
 
         self.vez_1_textura = None
-        self.vez_2_textura = pygame.image.load("obrazky/vez1.png")
+        self.vez_2_textura = pygame.image.load("obrazky/vez1.png").convert()
         self.vez_3_textura = None
 
-        self.side_menu_textura = pygame.image.load("obrazky/postranni_menu.png")
+        self.side_menu_textura = pygame.image.load("obrazky/postranni_menu.png").convert()
+        self.side_menu_end_action_img = pygame.image.load("obrazky/remove_action.png").convert_alpha()
 
         match self.obtiznost:
             case 1:
