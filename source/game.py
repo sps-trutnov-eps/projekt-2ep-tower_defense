@@ -58,8 +58,6 @@ def load_seznam_entit(hra, log):
             seznam_entit["rozcesti"] = load_entities("rozcesti", hra)
             log.write_to_log("Načteny rozcestí")
 
-            # TODO: veze, doly, vesnice
-
         case _:
             pass
 
@@ -69,6 +67,9 @@ def load_seznam_entit(hra, log):
     hra.list_of_buttons.append(tower1button)
     hra.list_of_buttons.append(tower2button)
     hra.list_of_buttons.append(tower3button)
+
+    remove_action_button = hra.Tlacitko(hra, 0, 710, None)
+    hra.list_of_buttons.append(remove_action_button)
 
     return seznam_entit
 
@@ -255,6 +256,7 @@ def draw_menu(window, hra, texts):
     # window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 250))
     pygame.draw.rect(window, GREEN, (0, 370, 90, 90))
 
+    window.blit(hra.side_menu_end_action_img, (1, 710))
     # Velký text, není potřeba
     # window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
     # window.blit(texts[1], (100, 800 - texts[1].get_height()))
@@ -370,6 +372,9 @@ def game_main(mapa, obtiznost):
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         current_action = button.action
                         action_changed = True
+                        if not current_action:
+                            circle_radius = 0
+                            circle_radius_range = 0
                 if not action_changed and current_action:
                     x, y = pygame.mouse.get_pos()
                     nova_vez = hra.Vez(current_action, (x - 22, y - 22), hra)
