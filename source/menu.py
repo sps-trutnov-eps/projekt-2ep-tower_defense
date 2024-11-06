@@ -100,6 +100,15 @@ def menu_obtiznosti(window):
         obtiznost3 = pygame.Rect(508, 200, 180, 180)
         pygame.draw.rect(window, cerna, obtiznost3)
         
+        font_text = pygame.font.SysFont(None, 50)
+        text_lehka = font_text.render('LEHKÁ', True, cerna)
+        text_stredni = font_text.render('STŘEDNÍ', True, cerna)
+        text_tezka = font_text.render('TĚŽKÁ', True, cerna)
+        
+        window.blit(text_lehka, (obtiznost1.x + 30, obtiznost1.y + 200))
+        window.blit(text_stredni, (obtiznost2.x + 15, obtiznost2.y + 200))
+        window.blit(text_tezka, (obtiznost3.x + 30, obtiznost3.y + 200))
+        
         pygame.display.flip()
         
         
