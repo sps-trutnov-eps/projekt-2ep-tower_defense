@@ -128,10 +128,15 @@ class Hra:
                     self.rect_color = (255, 255, 0)
                     self.odmena = 7
                 case "tank":
-                    self.hp = 50
+                    self.hp = 25
                     self.speed = 1
                     self.rect_color = (0, 0, 0)
                     self.odmena = 10
+                case "boss":
+                    self.hp = 150
+                    self.speed 0.5
+                    self.rect_color = (255, 0, 255)
+                    self.odmena = 500
                 case _:
                     self.hp = 4
                     self.speed = 2
@@ -381,6 +386,9 @@ class Hra:
 
                 list_of_enemies.append(special_enemy)
                 location_offset += special_enemy.rect.width + 10
+
+            if hra_instance.wave_count == 10:
+                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, location_offset + 10))
 
             return list_of_enemies
 
