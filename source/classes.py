@@ -128,7 +128,7 @@ class Hra:
                     self.rect_color = (255, 255, 0)
                     self.odmena = 7
                 case "tank":
-                    self.hp = 25
+                    self.hp = 50
                     self.speed = 1
                     self.rect_color = (0, 0, 0)
                     self.odmena = 10
@@ -535,6 +535,13 @@ class Hra:
         def __init__(self, hra_instance, x, y, action):
             self.rect = pygame.Rect(x, y, 90, 90)
             self.action = action
+
+        def buy_ammo(self, hra_instance):
+            if self.action == "buy_ammo":
+                if hra_instance.penezenka >= 200 and hra_instance.mnozstvi_streliva < hra_instance.celkova_kapacita_streliva:
+                    hra_instance.mnozstvi_streliva += 50
+                    hra_instance.penezenka -= 200
+
 
     class Logging:
         def __init__(self):

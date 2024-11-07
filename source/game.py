@@ -69,7 +69,9 @@ def load_seznam_entit(hra, log):
     hra.list_of_buttons.append(tower3button)
 
     remove_action_button = hra.Tlacitko(hra, 0, 710, None)
+    purchase_ammo_button = hra.Tlacitko(hra, 0, 710 - 28, "buy_ammo")
     hra.list_of_buttons.append(remove_action_button)
+    hra.list_of_buttons.append(purchase_ammo_button)
 
     return seznam_entit
 
@@ -368,19 +370,29 @@ def game_main(mapa, obtiznost):
 
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 action_changed = False
+                
                 for button in hra.list_of_buttons:
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         current_action = button.action
                         action_changed = True
+                        
                         if not current_action:
                             circle_radius = 0
                             circle_radius_range = 0
+                
                 if not action_changed and current_action:
                     x, y = pygame.mouse.get_pos()
-                    nova_vez = hra.Vez(current_action, (x - 22, y - 22), hra)
-                    if not test_for_collisions(nova_vez, hra) and hra.penezenka >= nova_vez.placement_cost:
-                        hra.seznam_entit["veze"].append(nova_vez)
-                        hra.penezenka -= nova_vez.placement_cost
+                    
+                    if current_action == "buy_ammo":
+                        hra.list_of_buttons[4].buy_ammo(hra)
+                    
+                    else:
+                        nova_vez = hra.Vez(current_action, (x - 22, y - 22), hra)
+
+                        if not test_for_collisions(nova_vez, hra) and hra.penezenka >= nova_vez.placement_cost:
+                            hra.seznam_entit["veze"].append(nova_vez)
+                            hra.penezenka -= nova_vez.placement_cost
+            
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 3:
                 current_action = None
                 circle_radius = 0
