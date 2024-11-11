@@ -134,7 +134,7 @@ class Hra:
                     self.odmena = 10
                 case "boss":
                     self.hp = 150
-                    self.speed 0.5
+                    self.speed = 0.5
                     self.rect_color = (255, 0, 255)
                     self.odmena = 500
                 case _:
