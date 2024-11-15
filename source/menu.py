@@ -25,7 +25,7 @@ def menu_draw(window):
     window.fill(bila)
     
     global button_rect
-    font = pygame.font.SysFont(None, 140)
+    font = pygame.font.SysFont(None, 150)
     text = font.render('HRÁT', True, bila)
     button_rect = pygame.Rect(250, 200, 300, 150)
     pygame.draw.rect(window, cerna, button_rect)
