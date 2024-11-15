@@ -129,7 +129,7 @@ def get_circle_range_radius(hra, current_action):
         case "speedy_tower":
             return 70
         case "sniper_tower":
-            return 1200
+            return 600
         case _:
             return 75
 
@@ -270,8 +270,8 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
     circle_surface.fill((0, 0, 0, 0))
-    pygame.draw.circle(circle_surface, GREEN_TRANSLUCENT, (400, 400), circle_radius_range)
-    pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (400, 400), circle_radius)
+    pygame.draw.circle(circle_surface, GREEN_TRANSLUCENT, (1000, 1000), circle_radius_range)
+    pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (1000, 1000), circle_radius)
 
     for cesta in hra.seznam_entit["cesty"]:  # in dev only
         pygame.draw.rect(window, WHITE, cesta.cesta)
@@ -324,7 +324,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
         #pygame.draw.rect(window, (153, 24, 240), zakladna.rect)
         window.blit(hra.spawner_textura, (zakladna.rect.x, zakladna.rect.y))
 
-    window.blit(circle_surface, (mouse_x - 400, mouse_y - 400))
+    window.blit(circle_surface, (mouse_x - 1000, mouse_y - 1000))
 
     draw_menu(window, hra, texts)
 
@@ -334,7 +334,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 def game_main(mapa, obtiznost):
     from classes import Hra
 
-    circle_surface = pygame.Surface((800, 800), pygame.SRCALPHA)
+    circle_surface = pygame.Surface((2000, 2000), pygame.SRCALPHA)
     circle_radius = 0
     circle_radius_range = 0
 

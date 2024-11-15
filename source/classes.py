@@ -128,12 +128,12 @@ class Hra:
                     self.rect_color = (255, 255, 0)
                     self.odmena = 7
                 case "tank":
-                    self.hp = 25
+                    self.hp = 50
                     self.speed = 1
                     self.rect_color = (0, 0, 0)
                     self.odmena = 10
                 case "boss":
-                    self.hp = 150
+                    self.hp = 500
                     self.speed = 0.5
                     self.rect_color = (255, 0, 255)
                     self.odmena = 500
@@ -388,7 +388,10 @@ class Hra:
                 location_offset += special_enemy.rect.width + 10
 
             if hra_instance.wave_count == 10:
-                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, location_offset + 10))
+                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, location_offset - 50))
+
+            if hra_instance.wave_count > 15:
+                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, location_offset - 50))
 
             return list_of_enemies
 
@@ -465,14 +468,14 @@ class Hra:
                     self.attack_cooldown = 25
                     self.radius = 70
                     self.blittable = hra_instance.vez_2_textura
-                    self.placement_cost = 145
+                    self.placement_cost = 160
 
                 case "sniper_tower":
                     self.damage = 15
                     self.attack_cooldown = 300
-                    self.radius = 1200
+                    self.radius = 600
                     self.blittable = None
-                    self.placement_cost = 175
+                    self.placement_cost = 250
                     self.placement_radius = 100
 
                 case _:  # v případě chyby
