@@ -371,8 +371,7 @@ def game_main(mapa, obtiznost):
     game_loaded_time = time.time()
 
     while game_running:
-        blit_button_text = False
-
+        started_blitting = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_running = False
@@ -411,8 +410,12 @@ def game_main(mapa, obtiznost):
             for button in hra.list_of_buttons:
                 if button.rect.collidepoint(pygame.mouse.get_pos()):
                     if not button.action == "buy_ammo":
+                        started_blitting = True
                         blit_button_text = True
                         button_descrip = [button.cost, button.range, button.damage]
+                else:
+                    if not started_blitting:
+                        blit_button_text = False
 
         if current_action:
             circle_radius = get_circle_radius(hra, current_action)
