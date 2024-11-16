@@ -1,58 +1,73 @@
 import pygame
+
 bila = (255, 255,  255)
 cerna = (0, 0, 0)
+
+menu_open = True
+running = True
+obtiznosti_running = True
 
 
 def menu_main():
     pygame.init()
     menu_window = pygame.display.set_mode((800, 600))
-    menu_open = True
+
+    global menu_open
 
     while menu_open:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                obtiznosti_running = False
+                running = False
                 menu_open = False
+                return (False, False, False)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if button_rect.collidepoint(event.pos):
-                    menu_mapy(menu_window)
+                    map_difficulty = menu_mapy(menu_window)
+                    menu_open = False
 
         menu_draw(menu_window)
         
     pygame.quit()
 
+    return map_difficulty[0], map_difficulty[1], True
+
 
 def menu_draw(window):
-    window.fill(bila)
-    
     global button_rect
+
+    window.fill(bila)
+
     font = pygame.font.SysFont(None, 150)
     text = font.render('HRÁT', True, bila)
     button_rect = pygame.Rect(250, 200, 300, 150)
     pygame.draw.rect(window, cerna, button_rect)
     text_rect = text.get_rect(center=button_rect.center)
     window.blit(text, text_rect)
-    
-    
+
     pygame.display.flip()
-    
+
+
 def menu_mapy(window):
-    running = True
+    global running, obtiznosti_running
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                obtiznosti_running = False
                 running = False
+                menu_open = False
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if mapa1.collidepoint(event.pos):
-                    menu_obtiznosti(window)
-                    mapa = mapa1
+                    mapa = 1
+                    running = False
                 elif mapa2.collidepoint(event.pos):
-                    menu_obtiznosti(window)
-                    mapa = mapa2
+                    mapa = 2
+                    running = False
                 elif mapa3.collidepoint(event.pos):
-                    menu_obtiznosti(window)
-                    mapa = mapa3
-           
-           
+                    mapa = 3
+                    running = False
+
         window.fill(bila)
         
         font = pygame.font.SysFont(None, 150)
@@ -67,24 +82,35 @@ def menu_mapy(window):
         mapa3 = pygame.Rect(508, 200, 180, 180)
         pygame.draw.rect(window, cerna, mapa3)
         
-        
         pygame.display.flip()
-        
-        
+
+    if obtiznosti_running:
+        obtiznost = menu_obtiznosti(window)
+    else:
+        obtiznost = False
+
+    return (mapa, obtiznost)
+
         
 def menu_obtiznosti(window):
-    running = True
-    while running:
+    global obtiznosti_running
+    while obtiznosti_running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                obtiznosti_running = False
                 running = False
+                menu_open = False
+
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if obtiznost1.collidepoint(event.pos):
-                    obtiznost = obtiznost1
+                    obtiznost = 1
+                    obtiznosti_running = False
                 elif obtiznost2.collidepoint(event.pos):
-                    obtiznost = obtiznost2
+                    obtiznost = 2
+                    obtiznosti_running = False
                 elif obtiznost3.collidepoint(event.pos):
-                    obtiznost = obtiznost3
+                    obtiznost = 3
+                    obtiznosti_running = False
         
         window.fill(bila)
         
@@ -110,10 +136,9 @@ def menu_obtiznosti(window):
         window.blit(text_tezka, (obtiznost3.x + 30, obtiznost3.y + 200))
         
         pygame.display.flip()
-        
-        
 
-    
+    return obtiznost
+
     
 if __name__ == "__main__":
     menu_main()
