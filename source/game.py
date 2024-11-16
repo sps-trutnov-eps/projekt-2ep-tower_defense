@@ -265,7 +265,9 @@ def draw_menu(window, hra, texts):
     # window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
 
 
-def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_radius_range):
+def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_radius_range, blit_button_text,
+                     button_descrip):
+
     window.fill(BLACK)
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -328,6 +330,11 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     draw_menu(window, hra, texts)
 
+    if blit_button_text:
+        window.blit(wave_text.render(str(button_descrip[0]), 0, WHITE), (mouse_x + 40, mouse_y))
+        window.blit(wave_text.render(str(button_descrip[1]), 0, WHITE), (mouse_x + 40, mouse_y - 30))
+        window.blit(wave_text.render(str(button_descrip[2]), 0, WHITE), (mouse_x + 40, mouse_y - 65))
+
     pygame.display.flip()
 
 
@@ -346,6 +353,8 @@ def game_main(mapa, obtiznost):
     game_running = True
 
     current_action = None
+    blit_button_text = False
+    button_descrip = [0, 0, 0]
 
     hra = Hra(mapa, obtiznost)
     log = hra.Logging()
@@ -362,6 +371,7 @@ def game_main(mapa, obtiznost):
     game_loaded_time = time.time()
 
     while game_running:
+        blit_button_text = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -398,6 +408,12 @@ def game_main(mapa, obtiznost):
                 circle_radius = 0
                 circle_radius_range = 0
 
+            for button in hra.list_of_buttons:
+                if button.rect.collidepoint(pygame.mouse.get_pos()):
+                    if not button.action == "buy_ammo":
+                        blit_button_text = True
+                        button_descrip = [button.cost, button.range, button.damage]
+
         if current_action:
             circle_radius = get_circle_radius(hra, current_action)
             circle_radius_range = get_circle_range_radius(hra, current_action)
@@ -419,7 +435,7 @@ def game_main(mapa, obtiznost):
 
         game_window_draw(game_window, hra, [text_vlna, text_strelivo, text_penize, text_menu_wave_count,
                                             text_menu_penize, text_menu_strelivo], circle_surface, circle_radius,
-                         circle_radius_range)
+                                            circle_radius_range, blit_button_text, button_descrip)
 
         clock.tick(FPS)
 

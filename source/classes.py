@@ -547,12 +547,24 @@ class Hra:
             self.rect = pygame.Rect(x, y, 90, 90)
             self.action = action
 
+            if self.action == "normal_tower":
+                self.cost = 100
+                self.range = 150
+                self.damage = 5
+            elif self.action == "speedy_tower":
+                self.cost = 160
+                self.damage = 2
+                self.range = 70
+            elif self.action == "sniper_tower":
+                self.cost = 250
+                self.range = 600
+                self.damage = 15
+
         def buy_ammo(self, hra_instance):
             if self.action == "buy_ammo":
                 if hra_instance.penezenka >= 200 and hra_instance.mnozstvi_streliva < hra_instance.celkova_kapacita_streliva:
                     hra_instance.mnozstvi_streliva += 50
                     hra_instance.penezenka -= 200
-
 
     class Logging:
         def __init__(self):
