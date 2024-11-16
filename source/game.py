@@ -73,6 +73,9 @@ def load_seznam_entit(hra, log):
     hra.list_of_buttons.append(remove_action_button)
     hra.list_of_buttons.append(purchase_ammo_button)
 
+    speed_up_button = hra.Tlacitko(hra, 0, 710 - 140, "speed")
+    hra.list_of_buttons.append(speed_up_button)
+
     return seznam_entit
 
 
@@ -119,7 +122,7 @@ def get_circle_radius(hra, current_action):
         case "sniper_tower":
             return 100/2
         case _:
-            return 75
+            return 0
 
 
 def get_circle_range_radius(hra, current_action):
@@ -131,7 +134,7 @@ def get_circle_range_radius(hra, current_action):
         case "sniper_tower":
             return 600
         case _:
-            return 75
+            return 0
 
 
 def test_for_collisions(nova_vez, hra):
@@ -255,14 +258,13 @@ def draw_menu(window, hra, texts):
     pygame.draw.rect(window, BLUE, (0, 180, 90, 90))
 
     window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 275))
+
     # window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 250))
     pygame.draw.rect(window, GREEN, (0, 370, 90, 90))
 
+    pygame.draw.rect(window, BLACK, hra.list_of_buttons[5])
+
     window.blit(hra.side_menu_end_action_img, (1, 710))
-    # Velký text, není potřeba
-    # window.blit(texts[0], (1200 - texts[0].get_width(), 800 - texts[0].get_height()))
-    # window.blit(texts[1], (100, 800 - texts[1].get_height()))
-    # window.blit(texts[2], (100, 800 - texts[1].get_height()*2))
 
 
 def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_radius_range, blit_button_text,
@@ -370,6 +372,9 @@ def game_main(mapa, obtiznost):
     import time
     game_loaded_time = time.time()
 
+    speed_options = (1, 2, 4, 10)
+    current_speed_option = 0
+
     while game_running:
         started_blitting = False
         for event in pygame.event.get():
@@ -384,17 +389,37 @@ def game_main(mapa, obtiznost):
                     if button.rect.collidepoint(pygame.mouse.get_pos()):
                         current_action = button.action
                         action_changed = True
-                        
+
                         if not current_action:
                             circle_radius = 0
                             circle_radius_range = 0
-                
+
+                        if button.action == "speed":
+                            current_speed_option += 1
+                            if current_speed_option > 3:
+                                current_speed_option = 0
+
+                            if speed_options[current_speed_option] == 1:
+                                hra.speed_game_up(0.1)
+                                hra.speed_up_multiplier = 1
+                            elif speed_options[current_speed_option] == 2:
+                                hra.speed_game_up(2)
+                                hra.speed_up_multiplier = 2
+                            elif speed_options[current_speed_option] == 4:
+                                hra.speed_game_up(2)
+                                hra.speed_up_multiplier = 4
+                            elif speed_options[current_speed_option] == 10:
+                                hra.speed_game_up(2.5)
+                                hra.speed_up_multiplier = 10
+
+                        if current_action == "buy_ammo":
+                            hra.list_of_buttons[4].buy_ammo(hra)
+
                 if not action_changed and current_action:
                     x, y = pygame.mouse.get_pos()
-                    
-                    if current_action == "buy_ammo":
-                        hra.list_of_buttons[4].buy_ammo(hra)
-                    
+
+                    if button.action == "speed" and button.action == "buy_ammo":
+                        pass
                     else:
                         nova_vez = hra.Vez(current_action, (x - 22, y - 22), hra)
 
@@ -409,7 +434,7 @@ def game_main(mapa, obtiznost):
 
             for button in hra.list_of_buttons:
                 if button.rect.collidepoint(pygame.mouse.get_pos()):
-                    if not button.action == "buy_ammo":
+                    if not button.action == "buy_ammo" and not button.action == "speed":
                         started_blitting = True
                         blit_button_text = True
                         button_descrip = [button.cost, button.range, button.damage]

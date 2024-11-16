@@ -8,6 +8,7 @@ class Hra:
     def __init__(self, mapa, obtiznost):
         self.mapa = mapa
         self.obtiznost = obtiznost
+        self.speed_up_multiplier = 1
         self.game_over = False
 
         self.wave_count = 0
@@ -74,8 +75,14 @@ class Hra:
         self.wave_count += 1
         self.aktualni_vlna_dokoncena = False
 
+    def speed_game_up(self, speed):
+        for tower in self.seznam_entit["veze"]:
+            tower.attack_cooldown /= speed
+        for enemy in self.seznam_entit["nepratele"]:
+            enemy.speed *= speed
+
     class Nepritel:
-        def __init__(self, typ_nepritele, spawner_location, spawner_side, location_offset):
+        def __init__(self, typ_nepritele, spawner_location, spawner_side, location_offset, hra_instance):
             """
                 Vytvořit nepřítele.
 
@@ -142,7 +149,7 @@ class Hra:
                     self.speed = 2
                     self.rect_color = (255, 0, 0)
 
-            self.speed = self.speed / 1.5
+            self.speed = self.speed / 1.5 * hra_instance.speed_up_multiplier
 
         def utok_na_zakladnu(self, hra_instance, zakladna_int, log):
             hra_instance.seznam_entit["zakladny"][zakladna_int].enemy_attack(self, log)
@@ -369,7 +376,8 @@ class Hra:
                     "normal",
                     self.location,
                     self.rotace_spawneru,
-                    location_offset
+                    location_offset,
+                    hra_instance
                 )
 
                 list_of_enemies.append(enemy)
@@ -381,17 +389,20 @@ class Hra:
                     random.choice(self.special_moznosti),
                     self.location,
                     self.rotace_spawneru,
-                    location_offset
+                    location_offset,
+                    hra_instance
                 )
 
                 list_of_enemies.append(special_enemy)
                 location_offset += special_enemy.rect.width + 10
 
             if hra_instance.wave_count == 10:
-                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, location_offset - 50))
+                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, 0,
+                    hra_instance))
 
             if hra_instance.wave_count > 15:
-                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, location_offset - 50))
+                list_of_enemies.append(hra_instance.Nepritel("boss", self.location, self.rotace_spawneru, 0,
+                    hra_instance))
 
             return list_of_enemies
 
@@ -484,6 +495,8 @@ class Hra:
                     self.radius = 200
                     self.placement_cost = 100
 
+            self.attack_cooldown /= hra_instance.speed_up_multiplier
+
         def shoot(self, seznam_nepratel, hra_instance):
             if self.cooldown < 1:
                 closest_enemy = self.find_closest_enemy(seznam_nepratel)
@@ -559,6 +572,8 @@ class Hra:
                 self.cost = 250
                 self.range = 600
                 self.damage = 15
+            else:
+                self.cost, self.range, self.damage = None, None, None
 
         def buy_ammo(self, hra_instance):
             if self.action == "buy_ammo":
