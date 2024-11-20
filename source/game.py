@@ -349,6 +349,7 @@ def game_main(mapa, obtiznost):
 
     clock = pygame.time.Clock()
 
+    #flags = pygame.FULLSCREEN | pygame.SCALED      <-- udělá fullscreen s přizpůsobenou obrazovkou
     game_window = pygame.display.set_mode((1200, 800))
     pygame.display.set_caption(f"Tower Defense - {mapa_translation(mapa)}")
     pygame.display.set_icon(pygame.image.load("obrazky/nepritel_normal.png"))
