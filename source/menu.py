@@ -2,6 +2,7 @@ import pygame
 
 bila = (255, 255,  255)
 cerna = (0, 0, 0)
+tlacitko_hrat = pygame.image.load("menu_obrazky/tlacitko_hrat.png")
 
 menu_open = True
 running = True
@@ -38,12 +39,8 @@ def menu_draw(window):
 
     window.fill(bila)
 
-    font = pygame.font.SysFont(None, 150)
-    text = font.render('HRÁT', True, bila)
     button_rect = pygame.Rect(250, 200, 300, 150)
-    pygame.draw.rect(window, cerna, button_rect)
-    text_rect = text.get_rect(center=button_rect.center)
-    window.blit(text, text_rect)
+    window.blit(pygame.transform.scale(tlacitko_hrat, (button_rect.width, button_rect.height)), button_rect.topleft) 
 
     pygame.display.flip()
 
