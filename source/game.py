@@ -10,6 +10,7 @@ menu_text = pygame.font.SysFont("Arial", 25)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GRAY = (30, 30, 30)
+LIGHT_GRAY = (200, 200, 200)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
@@ -333,9 +334,9 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
     draw_menu(window, hra, texts)
 
     if blit_button_text:
-        window.blit(wave_text.render(str(button_descrip[0]), 0, WHITE), (mouse_x + 40, mouse_y))
-        window.blit(wave_text.render(str(button_descrip[1]), 0, WHITE), (mouse_x + 40, mouse_y - 30))
-        window.blit(wave_text.render(str(button_descrip[2]), 0, WHITE), (mouse_x + 40, mouse_y - 65))
+        window.blit(wave_text.render("Cena: " + str(button_descrip[0]), 0, LIGHT_GRAY), (mouse_x + 40, mouse_y))
+        window.blit(wave_text.render("Dostřel: " + str(button_descrip[1]), 0, LIGHT_GRAY), (mouse_x + 40, mouse_y - 30))
+        window.blit(wave_text.render("Kalibr: " + str(button_descrip[2]), 0, LIGHT_GRAY), (mouse_x + 40, mouse_y - 65))
 
     pygame.display.flip()
 
@@ -439,6 +440,10 @@ def game_main(mapa, obtiznost):
                         started_blitting = True
                         blit_button_text = True
                         button_descrip = [button.cost, button.range, button.damage]
+
+                        for descrip in button_descrip:
+                            if not descrip:
+                                descrip = ""
                 else:
                     if not started_blitting:
                         blit_button_text = False
