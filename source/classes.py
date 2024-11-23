@@ -112,7 +112,7 @@ class Hra:
             # bude možné na ně střílet
             self.spawned = False
             location_offset += self.rect.width
-            self.odmena = 5
+            self.odmena = 3
 
             match self.otocen_na_stranu:
                 case "dolu":
@@ -133,17 +133,17 @@ class Hra:
                     self.hp = 2
                     self.speed = 3
                     self.rect_color = (255, 255, 0)
-                    self.odmena = 7
+                    self.odmena = 5
                 case "tank":
                     self.hp = 50
                     self.speed = 1
                     self.rect_color = (0, 0, 0)
-                    self.odmena = 10
+                    self.odmena = 8
                 case "boss":
                     self.hp = 500
                     self.speed = 0.5
                     self.rect_color = (255, 0, 255)
-                    self.odmena = 500
+                    self.odmena = 250
                 case _:
                     self.hp = 4
                     self.speed = 2
@@ -472,21 +472,21 @@ class Hra:
                     self.attack_cooldown = 75
                     self.radius = 150
                     self.blittable = None
-                    self.placement_cost = 100
+                    self.placement_cost = 150
 
                 case "speedy_tower":  # fast, short range tower?
                     self.damage = 2
                     self.attack_cooldown = 25
                     self.radius = 70
                     self.blittable = hra_instance.vez_2_textura
-                    self.placement_cost = 160
+                    self.placement_cost = 185
 
                 case "sniper_tower":
                     self.damage = 15
                     self.attack_cooldown = 300
                     self.radius = 600
                     self.blittable = None
-                    self.placement_cost = 250
+                    self.placement_cost = 350
                     self.placement_radius = 100
 
                 case _:  # v případě chyby
@@ -561,15 +561,15 @@ class Hra:
             self.action = action
 
             if self.action == "normal_tower":
-                self.cost = 100
+                self.cost = 150
                 self.range = 150
                 self.damage = 5
             elif self.action == "speedy_tower":
-                self.cost = 160
+                self.cost = 185
                 self.damage = 2
                 self.range = 70
             elif self.action == "sniper_tower":
-                self.cost = 250
+                self.cost = 350
                 self.range = 600
                 self.damage = 15
             else:
