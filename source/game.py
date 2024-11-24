@@ -14,6 +14,7 @@ LIGHT_GRAY = (200, 200, 200)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
 RED_TRANSLUCENT = (255, 0, 0, 50)      # původně 255,0,0,128
 GREEN_TRANSLUCENT = (0, 255, 0, 50)
 
@@ -303,9 +304,6 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     for enemy in hra.seznam_entit["nepratele"]:  # in dev only
         if enemy.spawned:
-            if enemy.rect_color != RED:
-                pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
-
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
                 window.blit(
@@ -318,6 +316,15 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
                     pygame.transform.rotate(hra.nepritel_tank_textura, stupne),
                     (enemy.rect.x, enemy.rect.y)
                 )
+
+            if enemy.typ_nepritele == "fast":
+                #stupne = preklad_na_stupne(enemy)
+                #window.blit(pygame.transform.rotate(hra.nepritel_fast_textura, stupne), (enemy.rect.x, enemy.rect.y))
+                pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
+
+            if enemy.typ_nepritele == "boss":
+                stupne = preklad_na_stupne(enemy)
+                window.blit(pygame.transform.rotate(hra.nepritel_boss_textura, stupne), (enemy.rect.x, enemy.rect.y))
 
     for vesnice in hra.seznam_entit["vesnice"]:  # in dev only
         pygame.draw.rect(window, vesnice.color, vesnice.rect)

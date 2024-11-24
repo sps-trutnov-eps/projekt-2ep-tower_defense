@@ -29,6 +29,7 @@ class Hra:
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert_alpha()
         self.nepritel_fast_textura = None
         self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/vez2.png"), (45, 45)).convert_alpha()
+        self.nepritel_boss_textura = pygame.transform.scale(pygame.image.load("obrazky/Boss.png"), (45, 45)).convert_alpha()
 
         self.background_textura = None
         self.spawner_textura = pygame.transform.scale(pygame.image.load("obrazky/base1.png"), (50, 50)).convert_alpha()
