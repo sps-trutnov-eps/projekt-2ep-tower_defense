@@ -324,7 +324,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
             if enemy.typ_nepritele == "boss":
                 stupne = preklad_na_stupne(enemy)
-                window.blit(pygame.transform.rotate(hra.nepritel_boss_textura, stupne), (enemy.rect.x, enemy.rect.y))
+                window.blit(pygame.transform.rotate(hra.nepritel_boss_textura, stupne), (enemy.rect.x -5, enemy.rect.y - 5))
 
     for vesnice in hra.seznam_entit["vesnice"]:  # in dev only
         pygame.draw.rect(window, vesnice.color, vesnice.rect)
