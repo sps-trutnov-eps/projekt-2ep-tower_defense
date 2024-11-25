@@ -37,12 +37,15 @@ def load_seznam_entit(hra, log):
     match hra.mapa:
         case 0:
             from mapy.mapa_0 import load_entities
+            hra.background_textura = pygame.image.load("mapy/mapa_0.PNG").convert()
+            hra.background_textura = pygame.transform.scale(hra.background_textura, (1108, 800))
 
         case 1:
             from mapy.mapa_1 import load_entities
 
         case _:
             from mapy.mapa_0 import load_entities
+            hra.background_textura = pygame.image.load("mapy/mapa_0.PNG").convert()
 
     seznam_entit["zakladny"] = load_entities("zakladny", hra)
     log.write_to_log("Načteny základny")
@@ -278,19 +281,24 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     window.fill(BLACK)
 
+    if hra.background_textura:
+        window.blit(hra.background_textura, (93, 0))
+
     mouse_x, mouse_y = pygame.mouse.get_pos()
     circle_surface.fill((0, 0, 0, 0))
     pygame.draw.circle(circle_surface, GREEN_TRANSLUCENT, (1000, 1000), circle_radius_range)
     pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (1000, 1000), circle_radius)
 
-    for cesta in hra.seznam_entit["cesty"]:  # in dev only
+    """     dev only
+    for cesta in hra.seznam_entit["cesty"]:
         pygame.draw.rect(window, WHITE, cesta.cesta)
 
-    for cesta in hra.seznam_entit["skryte_cesty"]:  # in dev only
+    for cesta in hra.seznam_entit["skryte_cesty"]:
         pygame.draw.rect(window, GRAY, cesta.cesta)
 
     for rozcesti in hra.seznam_entit["rozcesti"]:
         pygame.draw.rect(window, WHITE, rozcesti.rect)
+    """
 
     for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
