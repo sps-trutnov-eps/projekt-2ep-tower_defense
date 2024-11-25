@@ -61,7 +61,29 @@ def load_seznam_entit(hra, log):
             log.write_to_log("Načteny rozcestí")
 
         case _:
-            pass
+            from mapy.mapa_0 import load_entities
+            seznam_entit["zakladny"] = load_entities("zakladny", hra)
+            log.write_to_log("Načteny základny")
+
+            seznam_entit["spawnery"] = load_entities("spawnery", hra)
+            log.write_to_log("Načteny spawnery")
+
+            seznam_entit["veze"] = load_entities("veze", hra)
+            log.write_to_log("Načteny veze")
+
+            seznam_entit["doly"] = load_entities("doly", hra)
+            log.write_to_log("Načteny doly")
+
+            seznam_entit["vesnice"] = load_entities("vesnice", hra)
+            log.write_to_log("Načteny vesnice")
+
+            seznam_entit["cesty"] = load_entities("cesty", hra)
+            log.write_to_log("Načteny cesty")
+
+            seznam_entit["skryte_cesty"] = load_entities("skryte_cesty", hra)
+
+            seznam_entit["rozcesti"] = load_entities("rozcesti", hra)
+            log.write_to_log("Načteny rozcestí")
 
     tower1button = hra.Tlacitko(hra, 0, 180, "normal_tower")
     tower2button = hra.Tlacitko(hra, 0, 275, "speedy_tower")
