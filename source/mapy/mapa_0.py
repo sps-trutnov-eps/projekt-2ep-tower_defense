@@ -15,7 +15,6 @@ def load_entities(entity_type, initiated_game):
         case "nepratele":
             # typ_nepritele     vrací se prázdné, spawnery je tvoří
             to_return = [
-                None
             ]
         case "veze":
             # typ, (x, y)
@@ -27,7 +26,7 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Vesnice(initiated_game, (605, 480), 15),
                 initiated_game.Vesnice(initiated_game, (900, 370), 25),
                 initiated_game.Vesnice(initiated_game, (880, 560), 25)
-            ]      # není dokončená třída
+            ]
         case "cesty":
             to_return = [
                 initiated_game.Cesta(115, 55, 30, 100, "dolu"),
@@ -57,6 +56,8 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Cesta(1010, 90, 100, 30, "doprava"),     # TODO: to ale funguje jen z jedný strany??
                 initiated_game.Cesta(1110, 90, 30, 610, "dolu"),
                 initiated_game.Cesta(1070, 700, 70, 30, "doleva")
+
+                
             ]
         case "rozcesti":
             to_return = [
