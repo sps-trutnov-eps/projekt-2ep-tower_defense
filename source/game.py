@@ -289,7 +289,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
     pygame.draw.circle(circle_surface, GREEN_TRANSLUCENT, (1000, 1000), circle_radius_range)
     pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (1000, 1000), circle_radius)
 
-    """     dev only
+        # dev only
     for cesta in hra.seznam_entit["cesty"]:
         pygame.draw.rect(window, WHITE, cesta.cesta)
 
@@ -298,7 +298,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     for rozcesti in hra.seznam_entit["rozcesti"]:
         pygame.draw.rect(window, WHITE, rozcesti.rect)
-    """
+
 
     for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
@@ -520,4 +520,4 @@ def game_main(mapa, obtiznost):
 
 
 if __name__ == "__main__":
-    game_main(0, 1)
+    game_main(1, 1)
