@@ -53,11 +53,13 @@ def load_entities(entity_type, initiated_game):
             ]
         case "skryte_cesty":        # Když je základna zničená, tak chodí po "skrýté" cestě, která vede k další základně
             to_return = [
-                initiated_game.Cesta(1010, 90, 100, 30, "doprava"),     # TODO: to ale funguje jen z jedný strany??
-                initiated_game.Cesta(1110, 90, 30, 610, "dolu"),
-                initiated_game.Cesta(1070, 700, 70, 30, "doleva")
+                initiated_game.Cesta(1010, 60, 100, 30, "doprava"),
+                initiated_game.Cesta(1110, 60, 30, 30, "dolu"),
+                initiated_game.Cesta(1070, 700, 70, 30, "doleva"),
 
-                
+                initiated_game.Cesta(1040, 730, 100, 30, "doprava"),
+                initiated_game.Cesta(1140, 120, 30, 640, "nahoru"),
+                initiated_game.Cesta(1140, 90, 30, 30, "doleva")
             ]
         case "rozcesti":
             to_return = [
