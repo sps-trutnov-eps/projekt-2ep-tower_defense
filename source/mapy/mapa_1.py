@@ -38,7 +38,7 @@ def load_entities(entity_type, initiated_game):
                 initiated_game.Cesta(325, 245, 70, 30, "doprava"),
 
                 # pravý spawner
-                initiated_game.Cesta(950, 391, 200, 30, "doleva"),
+                initiated_game.Cesta(980, 391, 200, 30, "doleva"),
 
                 # cesta dolů
                 initiated_game.Cesta(920, 475, 30, 70, "dolu"),

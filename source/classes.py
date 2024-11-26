@@ -293,7 +293,7 @@ class Hra:
                                     self.otocen_na_stranu = turn_to
                         case "vertikalne":
                             if self.otocen_na_stranu != choices_ver[0] and self.otocen_na_stranu != choices_ver[1]:
-                                if rozcesti.rect.x <= self.rect.x <= rozcesti.rect.right:
+                                if rozcesti.rect.x <= self.rect.x and self.rect.right - 1 <= rozcesti.rect.right:
                                     turn_to = random.choice(choices_ver)
                                     self.otocen_na_stranu = turn_to
                         case _:
