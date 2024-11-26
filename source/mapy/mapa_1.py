@@ -42,11 +42,15 @@ def load_entities(entity_type, initiated_game):
 
                 # cesta dolů
                 initiated_game.Cesta(920, 475, 30, 70, "dolu"),
-                initiated_game.Cesta(880, 545, 70, 30, "doprava"),
+                initiated_game.Cesta(880, 545, 70, 30, "doleva"),
 
                 # cesta nahoru
                 initiated_game.Cesta(920, 275, 30, 70, "nahoru"),
-                initiated_game.Cesta(880, 245, 70, 30, "doleva")
+                initiated_game.Cesta(880, 245, 70, 30, "doleva"),
+
+                # spawnery
+                initiated_game.Cesta(610, 740, 30, 30, "nahoru"),
+                initiated_game.Cesta(610, 40, 30, 30, "dolu")
             ]
         case "skryte_cesty":
             to_return = []

@@ -42,6 +42,8 @@ def load_seznam_entit(hra, log):
 
         case 1:
             from mapy.mapa_1 import load_entities
+            hra.background_textura = pygame.image.load("mapy/mapa_1.PNG").convert()
+            hra.background_textura = pygame.transform.scale(hra.background_textura, (1108, 800))
 
         case _:
             from mapy.mapa_0 import load_entities
