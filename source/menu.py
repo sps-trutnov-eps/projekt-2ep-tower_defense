@@ -1,5 +1,8 @@
 import pygame
 
+zluta = (255, 255, 0)
+zelena = (0, 255, 0)
+cervena = (255, 0, 0)
 bila = (255, 255,  255)
 cerna = (0, 0, 0)
 tlacitko_hrat = pygame.image.load("menu_obrazky/tlacitko_hrat.png")
@@ -124,9 +127,9 @@ def menu_obtiznosti(window):
         pygame.draw.rect(window, cerna, obtiznost3)
         
         font_text = pygame.font.SysFont(None, 50)
-        text_lehka = font_text.render('LEHKÁ', True, cerna)
-        text_stredni = font_text.render('STŘEDNÍ', True, cerna)
-        text_tezka = font_text.render('TĚŽKÁ', True, cerna)
+        text_lehka = font_text.render('LEHKÁ', True, zelena)
+        text_stredni = font_text.render('STŘEDNÍ', True, zluta)
+        text_tezka = font_text.render('TĚŽKÁ', True, cervena)
         
         window.blit(text_lehka, (obtiznost1.x + 30, obtiznost1.y + 200))
         window.blit(text_stredni, (obtiznost2.x + 15, obtiznost2.y + 200))
