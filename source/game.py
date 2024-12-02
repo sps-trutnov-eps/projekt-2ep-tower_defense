@@ -48,6 +48,7 @@ def load_seznam_entit(hra, log):
         case _:
             from mapy.mapa_0 import load_entities
             hra.background_textura = pygame.image.load("mapy/mapa_0.PNG").convert()
+            hra.background_textura = pygame.transform.scale(hra.background_textura, (1108, 800))    # temp
 
     seznam_entit["zakladny"] = load_entities("zakladny", hra)
     log.write_to_log("Načteny základny")
@@ -291,6 +292,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
     pygame.draw.circle(circle_surface, GREEN_TRANSLUCENT, (1000, 1000), circle_radius_range)
     pygame.draw.circle(circle_surface, RED_TRANSLUCENT, (1000, 1000), circle_radius)
 
+    """
         # dev only
     for cesta in hra.seznam_entit["cesty"]:
         pygame.draw.rect(window, WHITE, cesta.cesta)
@@ -300,7 +302,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     for rozcesti in hra.seznam_entit["rozcesti"]:
         pygame.draw.rect(window, WHITE, rozcesti.rect)
-
+    """
 
     for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
@@ -504,7 +506,7 @@ def game_main(mapa, obtiznost):
     money_left_over = stats_font.render(f'Vaše peníze: {hra.penezenka}', False, BLACK)
 
     exit_menu_running = True
-    while exit_menu_running:
+    while exit_menu_running and hra.enemies_killed > 0:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit_menu_running = False

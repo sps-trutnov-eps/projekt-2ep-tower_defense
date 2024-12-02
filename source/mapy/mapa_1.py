@@ -50,7 +50,7 @@ def load_entities(entity_type, initiated_game):
 
                 # spawnery
                 initiated_game.Cesta(610, 740, 30, 30, "nahoru"),
-                initiated_game.Cesta(610, 40, 30, 30, "dolu")
+                initiated_game.Cesta(610, 30, 30, 40, "dolu")
             ]
         case "skryte_cesty":
             to_return = []
