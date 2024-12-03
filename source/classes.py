@@ -25,7 +25,7 @@ class Hra:
         self.seznam_cest = []
         self.aktualni_vlna_dokoncena = True
 
-        # textury       TODO: přidat více textur
+        # textury       TODO: Doplnit texturu nepritel_fast, vez_1 a vez_3
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert_alpha()
         self.nepritel_fast_textura = None
         self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/vez2.png"), (45, 45)).convert_alpha()
@@ -33,7 +33,7 @@ class Hra:
 
         self.background_textura = None
         self.spawner_textura = pygame.transform.scale(pygame.image.load("obrazky/base1.png"), (50, 50)).convert_alpha()
-        self.vesnice_textura = None
+        self.vesnice_textura = pygame.transform.scale(pygame.image.load("obrazky/military-tent.png"), (50, 50)).convert_alpha()
 
         self.vez_1_textura = None
         self.vez_2_textura = pygame.image.load("obrazky/vez1.png").convert_alpha()
