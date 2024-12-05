@@ -257,7 +257,6 @@ def game_updates(hra, log):
 
 def draw_menu(window, hra, texts):
     # rámeček
-    # pygame.draw.rect(window, WHITE, (90, 0, 2, 1200))
     window.blit(hra.side_menu_textura, (0, 0))
 
     # stats (vlna, střelivo, peníze)
@@ -267,11 +266,8 @@ def draw_menu(window, hra, texts):
 
     # obrázky věží
     window.blit(pygame.transform.scale(hra.vez_1_textura, (90, 90)), (0, 180))
-
     window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 275))
-
-    # window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 250))
-    pygame.draw.rect(window, GREEN, (0, 370, 90, 90))
+    window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 370))
 
     pygame.draw.rect(window, BLACK, hra.list_of_buttons[5])
 
@@ -303,21 +299,19 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
         pygame.draw.rect(window, WHITE, rozcesti.rect)
     """
 
-    for vez in hra.seznam_entit["veze"]:  # in dev only
+    for vez in hra.seznam_entit["veze"]:
         if vez.type == "normal_tower":
-            #pygame.draw.rect(window, BLUE, vez.testing_rect)
             window.blit(vez.blittable, vez.location)
         elif vez.type == "speedy_tower":
             window.blit(vez.blittable, vez.location)
         elif vez.type == "sniper_tower":
-            pygame.draw.rect(window, GREEN, vez.testing_rect)
-            # window.blit(vez.blittable, vez.location)
+            window.blit(vez.blittable, vez.location)
         elif vez.type == "test_tower":
             pygame.draw.rect(window, BLUE, vez.testing_rect)
         else:
             pygame.draw.rect(window, BLUE, vez.testing_rect)
 
-    for enemy in hra.seznam_entit["nepratele"]:  # in dev only
+    for enemy in hra.seznam_entit["nepratele"]:
         if enemy.spawned:
             if enemy.typ_nepritele == "normal":
                 stupne = preklad_na_stupne(enemy)
@@ -332,7 +326,7 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
                     (enemy.rect.x, enemy.rect.y)
                 )
 
-            if enemy.typ_nepritele == "fast":
+            if enemy.typ_nepritele == "fast":       # TODO: textura
                 #stupne = preklad_na_stupne(enemy)
                 #window.blit(pygame.transform.rotate(hra.nepritel_fast_textura, stupne), (enemy.rect.x, enemy.rect.y))
                 pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only

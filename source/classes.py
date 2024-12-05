@@ -25,7 +25,7 @@ class Hra:
         self.seznam_cest = []
         self.aktualni_vlna_dokoncena = True
 
-        # textury       TODO: Doplnit texturu nepritel_fast, vez_1 a vez_3
+        # textury       TODO: Doplnit texturu nepritel_fast
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert_alpha()
         self.nepritel_fast_textura = None
         self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/tank.png"), (45, 45)).convert_alpha()
@@ -37,7 +37,7 @@ class Hra:
 
         self.vez_1_textura = pygame.image.load("obrazky/vez_1.png").convert_alpha()
         self.vez_2_textura = pygame.image.load("obrazky/vez_2.png").convert_alpha()
-        self.vez_3_textura = None
+        self.vez_3_textura = pygame.image.load("obrazky/mortar.png").convert_alpha()
 
         self.side_menu_textura = pygame.image.load("obrazky/postranni_menu.png").convert_alpha()
         self.side_menu_end_action_img = pygame.image.load("obrazky/remove_action.png").convert_alpha()
@@ -475,7 +475,7 @@ class Hra:
                     self.blittable = hra_instance.vez_1_textura
                     self.placement_cost = 150
 
-                case "speedy_tower":  # fast, short range tower?
+                case "speedy_tower":  # fast, short range tower
                     self.damage = 2
                     self.attack_cooldown = 25
                     self.radius = 70
@@ -486,7 +486,7 @@ class Hra:
                     self.damage = 15
                     self.attack_cooldown = 300
                     self.radius = 600
-                    self.blittable = None
+                    self.blittable = hra_instance.vez_3_textura
                     self.placement_cost = 350
                     self.placement_radius = 100
 
