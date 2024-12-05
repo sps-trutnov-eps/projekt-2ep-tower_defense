@@ -445,7 +445,6 @@ class Hra:
                     self.rect = pygame.Rect(x, y, 30, 130)
 
     class Vez:
-        # TODO: pokládání
         def __init__(self, typ, location, hra_instance):
             self.type = typ
             self.location = location
