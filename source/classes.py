@@ -28,15 +28,15 @@ class Hra:
         # textury       TODO: Doplnit texturu nepritel_fast, vez_1 a vez_3
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert_alpha()
         self.nepritel_fast_textura = None
-        self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/vez2.png"), (45, 45)).convert_alpha()
+        self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/tank.png"), (45, 45)).convert_alpha()
         self.nepritel_boss_textura = pygame.transform.scale(pygame.image.load("obrazky/Boss.png"), (45, 45)).convert_alpha()
 
         self.background_textura = None
         self.spawner_textura = pygame.transform.scale(pygame.image.load("obrazky/base1.png"), (50, 50)).convert_alpha()
         self.vesnice_textura = pygame.transform.scale(pygame.image.load("obrazky/military-tent.png"), (50, 50)).convert_alpha()
 
-        self.vez_1_textura = None
-        self.vez_2_textura = pygame.image.load("obrazky/vez1.png").convert_alpha()
+        self.vez_1_textura = pygame.image.load("obrazky/vez_1.png").convert_alpha()
+        self.vez_2_textura = pygame.image.load("obrazky/vez_2.png").convert_alpha()
         self.vez_3_textura = None
 
         self.side_menu_textura = pygame.image.load("obrazky/postranni_menu.png").convert_alpha()
@@ -472,7 +472,7 @@ class Hra:
                     self.damage = 5
                     self.attack_cooldown = 75
                     self.radius = 150
-                    self.blittable = None
+                    self.blittable = hra_instance.vez_1_textura
                     self.placement_cost = 150
 
                 case "speedy_tower":  # fast, short range tower?

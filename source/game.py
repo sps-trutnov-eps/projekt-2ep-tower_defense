@@ -266,8 +266,7 @@ def draw_menu(window, hra, texts):
     window.blit(texts[5], (45 - texts[5].get_width() / 2, 138))
 
     # obrázky věží
-    # window.blit(pygame.transform.scale(hra.vez_1_textura, 45), (0, 150))   <--- není obrázek
-    pygame.draw.rect(window, BLUE, (0, 180, 90, 90))
+    window.blit(pygame.transform.scale(hra.vez_1_textura, (90, 90)), (0, 180))
 
     window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 275))
 
@@ -306,8 +305,8 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
 
     for vez in hra.seznam_entit["veze"]:  # in dev only
         if vez.type == "normal_tower":
-            pygame.draw.rect(window, BLUE, vez.testing_rect)
-            # window.blit(vez.blittable, vez.location)
+            #pygame.draw.rect(window, BLUE, vez.testing_rect)
+            window.blit(vez.blittable, vez.location)
         elif vez.type == "speedy_tower":
             window.blit(vez.blittable, vez.location)
         elif vez.type == "sniper_tower":
