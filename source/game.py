@@ -327,9 +327,8 @@ def game_window_draw(window, hra, texts, circle_surface, circle_radius, circle_r
                 )
 
             if enemy.typ_nepritele == "fast":       # TODO: textura
-                #stupne = preklad_na_stupne(enemy)
-                #window.blit(pygame.transform.rotate(hra.nepritel_fast_textura, stupne), (enemy.rect.x, enemy.rect.y))
-                pygame.draw.rect(window, enemy.rect_color, enemy.rect)  # in dev only
+                stupne = preklad_na_stupne(enemy)
+                window.blit(pygame.transform.rotate(hra.nepritel_fast_textura, stupne), (enemy.rect.x, enemy.rect.y))
 
             if enemy.typ_nepritele == "boss":
                 stupne = preklad_na_stupne(enemy)

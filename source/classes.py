@@ -25,9 +25,9 @@ class Hra:
         self.seznam_cest = []
         self.aktualni_vlna_dokoncena = True
 
-        # textury       TODO: Doplnit texturu nepritel_fast
+        # textury       TODO: Doplnit texturu pro spawner, speedup tlačítko
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert_alpha()
-        self.nepritel_fast_textura = None
+        self.nepritel_fast_textura = pygame.transform.scale(pygame.image.load("obrazky/wolf.png"), (45, 45)).convert_alpha()
         self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/tank.png"), (45, 45)).convert_alpha()
         self.nepritel_boss_textura = pygame.transform.scale(pygame.image.load("obrazky/Boss.png"), (45, 45)).convert_alpha()
 
