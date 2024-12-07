@@ -23,6 +23,11 @@ Pygame nainstalujete tak, že si otevřete příkazovou řádku (WIN + R, poté 
 tento příkaz:  
 `pip install pygame`
 
+### Jak spustit
+Pro spuštění, za předpokladu že máte nainstalovaný *Python* i *Pygame*, stačí spustit soubor *[main.py](source/main.py)*.  
+Pokud se po spuštění souboru nic neděje, zkuste jej spustit pomocí příkazové řádky, kde uvidíte, co se děje za chybu. 
+Problémy mohou například nastát v případě, že nejste na Windows.
+
 ---
 
 ## Typy pro hraní
