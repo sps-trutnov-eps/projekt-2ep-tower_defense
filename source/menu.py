@@ -11,6 +11,8 @@ obtiznost_lehka = pygame.image.load("menu_obrazky/obtiznost_lehka.png")
 obtiznost_stredni = pygame.image.load("menu_obrazky/obtiznost_stredni.png")
 obtiznost_tezka = pygame.image.load("menu_obrazky/obtiznost_tezka.png")
 background = pygame.image.load("menu_obrazky/background.png")
+mapa_1 = pygame.image.load("menu_obrazky/mapa_1.PNG")
+mapa_2 = pygame.image.load("menu_obrazky/mapa_2.PNG")
 
 menu_open = True
 running = True
@@ -18,6 +20,8 @@ obtiznosti_running = True
 
 
 def menu_main():
+    global menu_open, tlacitko_hrat, obtiznost_lehka, obtiznost_stredni, obtiznost_tezka, background, mapa_1, mapa_2
+
     pygame.init()
 
     menu_window = pygame.display.set_mode((800, 600))
@@ -25,7 +29,14 @@ def menu_main():
 
     button_rect = pygame.Rect(250, 200, 300, 150)
 
-    global menu_open
+    mapa_1 = pygame.transform.scale(mapa_1.convert(), (180, 180))
+    mapa_2 = pygame.transform.scale(mapa_2.convert(), (180, 180))
+
+    tlacitko_hrat.convert_alpha()
+    obtiznost_lehka.convert_alpha()
+    obtiznost_stredni.convert_alpha()
+    obtiznost_tezka.convert_alpha()
+    background.convert()
 
     while menu_open:
         for event in pygame.event.get():
@@ -66,13 +77,13 @@ def menu_mapy(window):
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if mapa1.collidepoint(event.pos):
-                    mapa = 1
+                    mapa = 0
                     running = False
                 elif mapa2.collidepoint(event.pos):
-                    mapa = 2
+                    mapa = 1
                     running = False
                 elif mapa3.collidepoint(event.pos):
-                    mapa = 3
+                    mapa = 2
                     running = False
 
         window.fill(bila)
@@ -84,12 +95,17 @@ def menu_mapy(window):
         text_rect = text.get_rect(center=(400, 100))  
         window.blit(text, text_rect)
         
-        mapa1 = pygame.Rect(108, 200, 180, 180)
+        mapa1 = pygame.Rect(108, 200, 184, 184)
         pygame.draw.rect(window, cerna, mapa1)
-        mapa2 = pygame.Rect(308, 200, 180, 180)
+        window.blit(mapa_1, (110, 202))
+
+        mapa2 = pygame.Rect(308, 200, 184, 184)
         pygame.draw.rect(window, cerna, mapa2)
-        mapa3 = pygame.Rect(508, 200, 180, 180)
+        window.blit(mapa_2, (310, 202))
+
+        mapa3 = pygame.Rect(508, 200, 184, 184)
         pygame.draw.rect(window, cerna, mapa3)
+        window.blit(mapa_1, (510, 202))
         
         pygame.display.flip()
 
