@@ -1,5 +1,6 @@
 import pygame
 
+
 zluta = (255, 255, 0)
 zelena = (0, 255, 0)
 cervena = (255, 0, 0)
@@ -9,6 +10,7 @@ tlacitko_hrat = pygame.image.load("menu_obrazky/tlacitko_hrat.png")
 obtiznost_lehka = pygame.image.load("menu_obrazky/obtiznost_lehka.png")
 obtiznost_stredni = pygame.image.load("menu_obrazky/obtiznost_stredni.png")
 obtiznost_tezka = pygame.image.load("menu_obrazky/obtiznost_tezka.png")
+background = pygame.image.load("menu_obrazky/background.png")
 
 menu_open = True
 running = True
@@ -17,7 +19,11 @@ obtiznosti_running = True
 
 def menu_main():
     pygame.init()
+
     menu_window = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption("Tower Defense")
+
+    button_rect = pygame.Rect(250, 200, 300, 150)
 
     global menu_open
 
@@ -33,19 +39,17 @@ def menu_main():
                     map_difficulty = menu_mapy(menu_window)
                     menu_open = False
 
-        menu_draw(menu_window)
+        menu_draw(menu_window, button_rect)
         
     pygame.quit()
 
     return map_difficulty[0], map_difficulty[1], True
 
 
-def menu_draw(window):
-    global button_rect
-
+def menu_draw(window, button_rect):
     window.fill(bila)
 
-    button_rect = pygame.Rect(250, 200, 300, 150)
+    window.blit(background, (0, 0))
     window.blit(pygame.transform.scale(tlacitko_hrat, (button_rect.width, button_rect.height)), button_rect.topleft) 
 
     pygame.display.flip()
@@ -72,7 +76,9 @@ def menu_mapy(window):
                     running = False
 
         window.fill(bila)
-        
+
+        window.blit(background, (0, 0))
+
         font = pygame.font.SysFont(None, 150)
         text = font.render('MAPY', True, cerna)  
         text_rect = text.get_rect(center=(400, 100))  
@@ -116,7 +122,9 @@ def menu_obtiznosti(window):
                     obtiznosti_running = False
         
         window.fill(bila)
-        
+
+        window.blit(background, (0, 0))
+
         font = pygame.font.SysFont(None, 150)
         text = font.render('OBTÍŽNOSTI', True, cerna)
         text_rect = text.get_rect(center=(400, 100))
