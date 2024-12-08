@@ -26,6 +26,7 @@ def menu_main():
 
     menu_window = pygame.display.set_mode((800, 600))
     pygame.display.set_caption("Tower Defense")
+    pygame.display.set_icon(pygame.image.load("obrazky/nepritel_normal.png"))
 
     button_rect = pygame.Rect(250, 200, 300, 150)
 

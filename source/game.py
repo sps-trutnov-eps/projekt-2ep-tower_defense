@@ -271,7 +271,7 @@ def draw_menu(window, hra, texts):
     window.blit(pygame.transform.scale(hra.vez_2_textura, (90, 90)), (0, 275))
     window.blit(pygame.transform.scale(hra.vez_3_textura, (90, 90)), (0, 370))
 
-    pygame.draw.rect(window, BLACK, hra.list_of_buttons[5])
+    window.blit(hra.side_menu_speedup_img, hra.list_of_buttons[5].rect.topleft)
 
     window.blit(hra.side_menu_end_action_img, (1, 710))
 

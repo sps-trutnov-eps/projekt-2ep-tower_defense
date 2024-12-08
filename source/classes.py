@@ -25,7 +25,7 @@ class Hra:
         self.seznam_cest = []
         self.aktualni_vlna_dokoncena = True
 
-        # textury       TODO: Doplnit texturu pro spawner, speedup tlačítko
+        # textury       TODO: Doplnit texturu pro spawner
         self.nepritel_normal_textura = pygame.image.load("obrazky/nepritel_normal.png").convert_alpha()
         self.nepritel_fast_textura = pygame.transform.scale(pygame.image.load("obrazky/wolf.png"), (45, 45)).convert_alpha()
         self.nepritel_tank_textura = pygame.transform.scale(pygame.image.load("obrazky/tank.png"), (45, 45)).convert_alpha()
@@ -41,6 +41,7 @@ class Hra:
 
         self.side_menu_textura = pygame.image.load("obrazky/postranni_menu.png").convert_alpha()
         self.side_menu_end_action_img = pygame.image.load("obrazky/remove_action.png").convert_alpha()
+        self.side_menu_speedup_img = pygame.image.load("obrazky/hourglass.png").convert_alpha()
 
         match self.obtiznost:
             case 1:
