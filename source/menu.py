@@ -91,7 +91,7 @@ def menu_mapy(window):
 
         window.blit(background, (0, 0))
 
-        font = pygame.font.SysFont(None, 150)
+        font = pygame.font.SysFont(None, 200)
         text = font.render('MAPY', True, cerna)  
         text_rect = text.get_rect(center=(400, 100))  
         window.blit(text, text_rect)
