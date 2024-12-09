@@ -118,9 +118,9 @@ def preklad_na_stupne(enemy):
 def mapa_translation(mapa):
     match mapa:
         case 1:
-            translation = "The First"
-        case 2:
             translation = "Futile Fight"
+        case 2:
+            translation = "The First"
         case _:
             translation = "How did we get here?"
 
