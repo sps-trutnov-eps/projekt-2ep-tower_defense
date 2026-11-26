@@ -1,3 +1,5 @@
+> Žákovský projekt třídy 2.EP, školní rok 2024/25, SPŠ Trutnov. Projekt se už neudržuje.
+
 # Tower Defense T-14
 
 Tower defense hra, vytvořena skupinou číslo 14, ve které se bráníte hordám nepřátel, kteří se vám pokoušejí zničit vaši 
